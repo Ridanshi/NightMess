@@ -1,0 +1,732 @@
+/* Import Fun Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/* Animations */
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px);
+  }
+  50% { 
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% { 
+    opacity: 0.3; 
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.6; 
+    transform: scale(1.05);
+  }
+  100% { 
+    opacity: 0.3; 
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0,0,0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  } 
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes drift {
+  0%, 100% {
+    transform: translateX(0px) translateY(0px);
+  }
+  25% {
+    transform: translateX(20px) translateY(-15px);
+  }
+  50% {
+    transform: translateX(-10px) translateY(-25px);
+  }
+  75% {
+    transform: translateX(15px) translateY(-10px);
+  }
+}
+
+/* Main Container */
+.edit-profile-container {
+  min-height: calc(100vh - 10vh);
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #94a3b8 75%, #64748b 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 3rem 0;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Enhanced Background Elements - Increased Visibility */
+.edit-profile-container::before {
+  content: '';
+  position: fixed;
+  top: -120px;
+  right: -120px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.25);
+  animation: shimmer 6s ease-in-out infinite;
+  z-index: 1;
+}
+
+.edit-profile-container::after {
+  content: '';
+  position: fixed;
+  bottom: -120px;
+  left: -120px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.25);
+  animation: shimmer 6s ease-in-out infinite 3s;
+  z-index: 1;
+}
+
+/* Additional Background Elements */
+.profile-bg-element-1 {
+  position: fixed;
+  top: 30%;
+  right: 10%;
+  width: 200px;
+  height: 200px;
+  border-radius: 30px;
+  background: linear-gradient(45deg, rgba(59, 130, 246, 0.08), rgba(16, 185, 129, 0.08));
+  animation: float 8s ease-in-out infinite;
+  z-index: 1;
+  transform: rotate(15deg);
+  pointer-events: none;
+}
+
+.profile-bg-element-2 {
+  position: fixed;
+  bottom: 20%;
+  left: 5%;
+  width: 150px;
+  height: 150px;
+  border-radius: 20px;
+  background: linear-gradient(45deg, rgba(168, 85, 247, 0.08), rgba(236, 72, 153, 0.08));
+  animation: float 6s ease-in-out infinite 2s;
+  z-index: 1;
+  transform: rotate(-10deg);
+  pointer-events: none;
+}
+
+.profile-bg-element-3 {
+  position: fixed;
+  top: 15%;
+  left: 15%;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.06), rgba(239, 68, 68, 0.06));
+  animation: drift 12s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.profile-bg-element-4 {
+  position: fixed;
+  top: 60%;
+  right: 25%;
+  width: 120px;
+  height: 120px;
+  border-radius: 25px;
+  background: linear-gradient(45deg, rgba(34, 197, 94, 0.08), rgba(59, 130, 246, 0.08));
+  animation: pulse 4s ease-in-out infinite;
+  z-index: 1;
+  transform: rotate(25deg);
+  pointer-events: none;
+}
+
+.profile-bg-element-5 {
+  position: fixed;
+  bottom: 35%;
+  right: 8%;
+  width: 100px;
+  height: 100px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.06), rgba(59, 130, 246, 0.06));
+  animation: float 7s ease-in-out infinite 4s;
+  z-index: 1;
+  transform: rotate(-20deg);
+  pointer-events: none;
+}
+
+.profile-bg-element-6 {
+  position: fixed;
+  top: 45%;
+  left: 8%;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, rgba(16, 185, 129, 0.06), rgba(245, 158, 11, 0.06));
+  animation: drift 10s ease-in-out infinite 2s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Floating Geometric Shapes */
+.profile-bg-dots {
+  position: fixed;
+  top: 25%;
+  right: 35%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.3);
+  animation: pulse 3s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.profile-bg-dots::before {
+  content: '';
+  position: absolute;
+  top: 30px;
+  left: 20px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(168, 85, 247, 0.3);
+  animation: pulse 3s ease-in-out infinite 1s;
+}
+
+.profile-bg-dots::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 40px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.3);
+  animation: pulse 3s ease-in-out infinite 2s;
+}
+
+.profile-bg-line-1 {
+  position: fixed;
+  top: 20%;
+  left: 30%;
+  width: 2px;
+  height: 80px;
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.2), transparent);
+  animation: shimmer 4s ease-in-out infinite;
+  z-index: 1;
+  transform: rotate(25deg);
+  pointer-events: none;
+}
+
+.profile-bg-line-2 {
+  position: fixed;
+  bottom: 30%;
+  right: 20%;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(168, 85, 247, 0.2), transparent);
+  animation: shimmer 5s ease-in-out infinite 2s;
+  z-index: 1;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
+
+/* Content Wrapper */
+.profile-content-wrapper {
+  position: relative;
+  z-index: 10;
+  animation: fadeInScale 1s ease-out;
+}
+
+/* Form Card - Similar to Saved Timetables Box */
+.profile-form-card {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(203, 213, 225, 0.3) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  padding: 2.5rem !important;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.profile-form-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(168, 85, 247, 0.4) 0%, rgba(59, 130, 246, 0.4) 50%, rgba(16, 185, 129, 0.4) 100%);
+  border-radius: 24px 24px 0 0;
+  z-index: 1;
+}
+
+.profile-form-card:hover {
+  transform: translateY(-2px) scale(1.005);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Title - Fun and Playful - Reduced Size for Welcome to NightMess */
+.profile-title {
+  color: #475569;
+  font-weight: 300;
+  font-size: 1.8rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  position: relative;
+  letter-spacing: -0.3px;
+  font-family: 'Pacifico', cursive;
+}
+
+.profile-title::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: #94a3b8;
+  border-radius: 1px;
+}
+
+/* Form Labels - Colorful and Fun */
+.profile-form-label {
+  font-weight: 600;
+  color: #64748b !important;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  text-transform: none;
+  letter-spacing: 0.2px;
+  position: relative;
+  display: inline-block;
+  font-family: 'Poppins', sans-serif;
+}
+
+.profile-form-label::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 60%;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.5) 0%, rgba(59, 130, 246, 0.5) 100%);
+  border-radius: 1px;
+}
+
+/* Form Controls - Modern and Accessible */
+.profile-form-control {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1.5px solid rgba(148, 163, 184, 0.2) !important;
+  color: #64748b !important;
+  border-radius: 16px !important;
+  padding: 14px 18px !important;
+  font-size: 1rem !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+  font-weight: 400 !important;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+}
+
+.profile-form-control:focus {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(168, 85, 247, 0.4) !important;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1) !important;
+  color: #475569 !important;
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.profile-form-control::placeholder {
+  color: #94a3b8 !important;
+  font-style: normal;
+  font-weight: 300;
+  font-family: 'Poppins', sans-serif;
+}
+
+.profile-form-control:hover {
+  border-color: rgba(168, 85, 247, 0.3) !important;
+  box-shadow: 0 3px 12px rgba(168, 85, 247, 0.08) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Submit Button - Fun and Interactive */
+.profile-submit-btn {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.8) 0%, rgba(59, 130, 246, 0.8) 50%, rgba(16, 185, 129, 0.8) 100%) !important;
+  border: none !important;
+  border-radius: 16px !important;
+  padding: 14px 28px !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  text-transform: none;
+  letter-spacing: 0.3px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.25) !important;
+  color: #ffffff !important;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+}
+
+.profile-submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.profile-submit-btn:hover::before {
+  left: 100%;
+}
+
+.profile-submit-btn:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.35) !important;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.9) 0%, rgba(37, 99, 235, 0.9) 50%, rgba(5, 150, 105, 0.9) 100%) !important;
+}
+
+.profile-submit-btn:focus {
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4) !important;
+  background: linear-gradient(90deg, #2563eb 0%, #059669 100%) !important;
+}
+
+.profile-submit-btn:active {
+  transform: translateY(0px) scale(1.01) !important;
+  background: linear-gradient(90deg, #2563eb 0%, #059669 100%) !important;
+}
+
+/* Alert Styles - Friendly and Clear */
+.profile-alert {
+  border-radius: 12px !important;
+  border: none !important;
+  backdrop-filter: blur(15px);
+  animation: fadeInScale 0.6s ease-out;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
+}
+
+.profile-alert.alert-success {
+  background: rgba(34, 197, 94, 0.15) !important;
+  color: #15803d !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+}
+
+.profile-alert.alert-danger {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #dc2626 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+/* Form Group Styling */
+.profile-form-group {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.profile-form-group::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0;
+  height: 3px;
+  background: #64748b;
+  transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-radius: 2px;
+}
+
+.profile-form-group:focus-within::before {
+  width: 100%;
+}
+
+/* Glass morphism enhancement */
+.profile-form-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+}
+
+/* Food Item Name Styling - Black Color for Idli */
+.fw-bold.fs-5 {
+  color: #000000 !important;
+  font-weight: 600 !important;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Fun Add to Cart button styling */
+.btn-primary {
+  background: #f59e0b !important;
+  border-color: #f59e0b !important;
+  font-weight: 600 !important;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 12px !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-primary:hover {
+  background: #d97706 !important;
+  border-color: #d97706 !important;
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3) !important;
+}
+
+.btn-primary:focus {
+  background: #d97706 !important;
+  border-color: #d97706 !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2) !important;
+}
+
+/* Fun search section styling */
+h2:contains("Search Food Items"), 
+.text-center h2 {
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 600 !important;
+  color: #6366f1 !important;
+  font-size: 1.8rem !important;
+}
+
+/* Search input and button styling */
+.form-control {
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 400 !important;
+  border-radius: 12px !important;
+}
+
+.form-control::placeholder {
+  color: #9ca3af !important;
+  font-weight: 300 !important;
+}
+
+.profile-glass {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.profile-text-gradient {
+  background: #64748b;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Add the background elements to the DOM */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background-image: 
+    radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 15% 85%, rgba(168, 85, 247, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .edit-profile-container {
+    padding: 2rem 0;
+  }
+  
+  .profile-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .profile-form-card {
+    margin: 0 1rem;
+    border-radius: 20px !important;
+    padding: 2rem !important;
+  }
+  
+  .profile-bg-element-1 {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .profile-bg-element-2 {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .profile-bg-element-3 {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .profile-bg-element-4 {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .profile-bg-element-5 {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .profile-bg-element-6 {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .edit-profile-container::before,
+  .edit-profile-container::after {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+@media (max-width: 576px) {
+  .profile-title {
+    font-size: 1.8rem;
+  }
+  
+  .profile-submit-btn {
+    padding: 12px 20px !important;
+    font-size: 14px !important;
+  }
+  
+  .profile-form-control {
+    padding: 12px 16px !important;
+  }
+  
+  /* Hide some background elements on very small screens */
+  .profile-bg-element-5,
+  .profile-bg-element-6,
+  .profile-bg-dots,
+  .profile-bg-line-1,
+  .profile-bg-line-2 {
+    display: none;
+  }
+}
+
+/* Smooth transitions for all elements */
+.edit-profile-container * {
+  transition: all 0.3s ease;
+}
+
+.food-type-logo {
+  width: 35px;
+  height: 25px;
+  object-fit: contain;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  padding: 2px;
+  display: block;
+}
+
+.food-type-logo.veg {
+  /* Veg logo specific adjustments */
+  width: 35px;
+  height: 25px;
+}
+
+.food-type-logo.nonveg {
+  /* Non-veg logo specific adjustments */
+  width: 35px;
+  height: 25px;
+}
+
+.food-type-logo.egg {
+  /* Egg logo specific adjustments (taller) */
+  width: 35px;
+  height: 35px;
+}
+
+.nightmess-title-section {
+  margin-bottom: 32px !important;
+}
+
+@media (max-width: 768px) {
+  .nightmess-title-section {
+    margin-bottom: 20px !important;
+  }
+}
+
+
+

@@ -1,0 +1,319 @@
+/* EditProfile.css - Bubble background + layout for EditProfile page */
+
+/* Add spacing below main content container */
+.editprofile-container {
+  padding-bottom: 5rem !important;
+  margin-bottom: 3rem !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background Bubbles - Lighter Orange Theme */
+.editprofile-container::before {
+  content: '';
+  position: fixed;
+  top: -60px;
+  right: -60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(251, 146, 60, 0.15);
+  animation: shimmer 6s ease-in-out infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.editprofile-container::after {
+  content: '';
+  position: fixed;
+  bottom: -60px;
+  left: -60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(249, 115, 22, 0.12);
+  animation: shimmer 6s ease-in-out infinite 3s;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Floating bubbles */
+.editprofile-bg-element-1 {
+  position: fixed;
+  top: 20%;
+  right: 15%;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(251, 146, 60, 0.18);
+  animation: float 8s ease-in-out infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.editprofile-bg-element-2 {
+  position: fixed;
+  bottom: 30%;
+  left: 10%;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(249, 115, 22, 0.15);
+  animation: float 6s ease-in-out infinite 2s;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.editprofile-bg-element-3 {
+  position: fixed;
+  top: 15%;
+  left: 8%;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: rgba(255, 237, 213, 0.6);
+  animation: drift 12s ease-in-out infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.editprofile-bg-element-4 {
+  position: fixed;
+  top: 60%;
+  right: 30%;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(251, 146, 60, 0.2);
+  animation: pulse 4s ease-in-out infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.editprofile-bg-element-5 {
+  position: fixed;
+  top: 45%;
+  left: 5%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(251, 146, 60, 0.22);
+  animation: slowFloat 10s ease-in-out infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.editprofile-bg-element-6 {
+  position: fixed;
+  top: 10%;
+  right: 45%;
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+  background: rgba(249, 115, 22, 0.18);
+  animation: bounceFloat 7s ease-in-out infinite 1s;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.editprofile-bg-element-7 {
+  position: fixed;
+  bottom: 15%;
+  right: 8%;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: rgba(255, 237, 213, 0.5);
+  animation: drift 14s ease-in-out infinite 2s;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.editprofile-bg-element-8 {
+  position: fixed;
+  top: 35%;
+  left: 25%;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background: rgba(251, 146, 60, 0.25);
+  animation: pulse 5s ease-in-out infinite 3s;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.editprofile-bg-element-9 {
+  position: fixed;
+  bottom: 45%;
+  right: 50%;
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  background: rgba(249, 115, 22, 0.2);
+  animation: float 9s ease-in-out infinite 1.5s;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.editprofile-bg-element-10 {
+  position: fixed;
+  top: 75%;
+  left: 35%;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  background: rgba(255, 237, 213, 0.55);
+  animation: shimmer 8s ease-in-out infinite 2.5s;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Keyframes animations same as Orders.css */
+
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px);
+  }
+  50% { 
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% { 
+    opacity: 0.15; 
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.4; 
+    transform: scale(1.05);
+  }
+  100% { 
+    opacity: 0.15; 
+    transform: scale(1);
+  }
+}
+
+@keyframes drift {
+  0%, 100% {
+    transform: translateX(0px) translateY(0px);
+  }
+  25% {
+    transform: translateX(20px) translateY(-15px);
+  }
+  50% {
+    transform: translateX(-10px) translateY(-25px);
+  }
+  75% {
+    transform: translateX(15px) translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes slowFloat {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px);
+  }
+  25% { 
+    transform: translateY(-8px) translateX(5px);
+  }
+  50% { 
+    transform: translateY(-15px) translateX(0px);
+  }
+  75% { 
+    transform: translateY(-8px) translateX(-5px);
+  }
+}
+
+@keyframes bounceFloat {
+  0%, 100% { 
+    transform: translateY(0px) scale(1);
+  }
+  50% { 
+    transform: translateY(-20px) scale(1.02);
+  }
+}
+
+/* Responsive adjustments */
+
+@media (max-width: 768px) {
+  .editprofile-container {
+    padding-bottom: 3rem !important;
+    margin-bottom: 2rem !important;
+  }
+
+  /* Adjust bubble sizes for mobile */
+  .editprofile-bg-element-1 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .editprofile-bg-element-2 {
+    width: 80px;
+    height: 80px;
+  }
+
+  .editprofile-bg-element-3 {
+    width: 90px;
+    height: 90px;
+  }
+
+  .editprofile-bg-element-4 {
+    width: 70px;
+    height: 70px;
+  }
+
+  .editprofile-bg-element-5,
+  .editprofile-bg-element-6,
+  .editprofile-bg-element-7 {
+    width: 60px;
+    height: 60px;
+  }
+
+  .editprofile-bg-element-8,
+  .editprofile-bg-element-9,
+  .editprofile-bg-element-10 {
+    width: 50px;
+    height: 50px;
+  }
+
+  .editprofile-container::before,
+  .editprofile-container::after {
+    width: 140px;
+    height: 140px;
+  }
+}
+
+@media (max-width: 576px) {
+  .editprofile-container {
+    padding-bottom: 2rem !important;
+  }
+
+  /* Hide some background elements on very small screens */
+  .editprofile-bg-element-5,
+  .editprofile-bg-element-6 {
+    display: none;
+  }
+}
+
+
+.editprofile-container {
+  min-height: 80vh; /* Enough height to center vertically */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Vertical center */
+  padding-bottom: 5rem !important; /* Keep existing padding for layout */
+  margin-bottom: 3rem !important;
+  position: relative;
+  overflow: hidden;
+}
