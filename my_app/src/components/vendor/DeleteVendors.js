@@ -19,12 +19,10 @@ function DeleteVendors() {
     }, []);
 
     const displayVendor = async () => {
-        let res = await fetch("http://localhost:5000/get_vendors", {
-            method: "post",
-            body: JSON.stringify({ id }),
-            headers: {
-                "Content-Type": "application/json",
-            },
+        // ✅ ONLY LOGIC FIX: Use correct endpoint and method
+        let res = await fetch(`http://localhost:5000/get_vendor_by_email/${id}`, {
+            method: "GET",
+            credentials: "include",
         });
         let result = await res.json();
         setMessname(result.messname);
@@ -36,9 +34,11 @@ function DeleteVendors() {
 
     const handleOnSubmit = async (e) => {
         e.preventDefault();
+        // ✅ ONLY LOGIC FIX: Use email as id and add credentials
         let res = await fetch("http://localhost:5000/delete_vendors", {
             method: "post",
-            body: JSON.stringify({ messname, owner, address, contact, id }),
+            credentials: "include",
+            body: JSON.stringify({ messname, owner, address, contact, id: email }),
             headers: {
                 "Content-Type": "application/json",
             },
@@ -46,6 +46,10 @@ function DeleteVendors() {
         let result = await res.json();
         if (result.data === "success") {
             setResult("Data deleted successfully.");
+            // ✅ ONLY LOGIC FIX: Redirect after success
+            setTimeout(() => {
+                history("/admin/show_vendors");
+            }, 2000);
         } else {
             setResult(result.msg || "Something went wrong.");
         }

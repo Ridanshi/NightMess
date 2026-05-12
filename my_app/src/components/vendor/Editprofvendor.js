@@ -13,58 +13,74 @@ function Editprofvendor() {
     const [contact, setContact] = useState("");
     const [address, setAddress] = useState("");
     const [result, setResult] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    useEffect(
-        () => {
-            console.log(id);
-            displayVendor();
-        },
-        []
-    )
+    useEffect(() => {
+        console.log(id);
+        displayVendor();
+    }, []);
 
-    const displayVendor = async (e) => {
-        //e.preventDefault();
-        let vendata = await axios.get("http://localhost:5000/get_vendor");
-
-        console.log("meddata: ", vendata.data);
-        const vendor=vendata.data;
-        if (vendor) {
-            setMessname(vendor.messname );
-            setOwner(vendor.owner);
-            setAddress(vendor.vendor_address);
-            setContact(vendor.vendor_contact);
-        }
-        else {
-            setResult("Data Not Found")
+    const displayVendor = async () => {
+        try {
+            let vendata = await axios.get("http://localhost:5000/get_vendor");
+            console.log("vendordata: ", vendata.data);
+            const vendor = vendata.data;
+            
+            if (vendor) {
+                setMessname(vendor.messname || "");
+                setOwner(vendor.owner || "");
+                setAddress(vendor.vendor_address || "");
+                setContact(vendor.vendor_contact || "");
+            } else {
+                setResult("Data Not Found");
+            }
+        } catch (error) {
+            console.error("Error fetching vendor:", error);
+            setResult("Error loading profile data");
         }
     };
+
     const handleOnSubmit = async (e) => {
         e.preventDefault();
-        let result = await fetch(
-            'http://localhost:5000/update_vendor_profile', {
-            method: "post",
-            body: JSON.stringify({ messname, owner, address, contact }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        result = await result.json();
-        console.log(result);
+        setLoading(true);
+        setResult("");
 
-        if (result) {
-            setResult("Data Updated successfully!");
-            setMessname(messname);
-            setOwner(owner);
-            setAddress(address);
-            setContact(contact);
-        }
-        else {
-            setResult("Data cannot be changed");
+        try {
+            // ✅ FIXED: Send with correct field names
+            let result = await fetch('http://localhost:5000/update_vendor_profile', {
+                method: "post",
+                body: JSON.stringify({ 
+                    messname, 
+                    owner, 
+                    address: address,      // Backend expects 'address'
+                    contact: contact       // Backend expects 'contact'
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include' // Include cookies for session
+            });
+
+            const data = await result.json();
+            console.log("Update result:", data);
+
+            if (data.data === 'success') {
+                setResult("Data Updated successfully!");
+                // Optionally reload the data to confirm update
+                await displayVendor();
+            } else {
+                setResult(data.msg || "Data cannot be changed");
+            }
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            setResult("Error updating profile. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-         <>
+        <>
             <MedMenu />
             <Container className="mt-4">
                 <Row className="justify-content-center">
@@ -78,6 +94,7 @@ function Editprofvendor() {
                                     value={messname}
                                     onChange={(e) => setMessname(e.target.value)}
                                     placeholder="Enter mess name"
+                                    required
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
@@ -87,6 +104,7 @@ function Editprofvendor() {
                                     value={owner}
                                     onChange={(e) => setOwner(e.target.value)}
                                     placeholder="Enter owner name"
+                                    required
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
@@ -96,6 +114,7 @@ function Editprofvendor() {
                                     value={address}
                                     onChange={(e) => setAddress(e.target.value)}
                                     placeholder="Enter address"
+                                    required
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
@@ -105,11 +124,12 @@ function Editprofvendor() {
                                     value={contact}
                                     onChange={(e) => setContact(e.target.value)}
                                     placeholder="Enter contact number"
+                                    required
                                 />
                             </Form.Group>
                             <div className="d-grid">
-                                <Button type="submit" variant="primary">
-                                    Update Profile
+                                <Button type="submit" variant="primary" disabled={loading}>
+                                    {loading ? "Updating..." : "Update Profile"}
                                 </Button>
                             </div>
                         </Form>
@@ -123,6 +143,6 @@ function Editprofvendor() {
             </Container>
         </>
     );
-
 }
+
 export default Editprofvendor;

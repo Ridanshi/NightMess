@@ -12,7 +12,7 @@ import {
   Modal,
 } from "react-bootstrap";
 import VendorMenu from "./VendorMenu";
-import { calculateGlobalOrderNumbersForDate } from "./OrderUtils"; // Adjust path if needed
+import { calculateGlobalOrderNumbersForDate } from "./OrderUtils";
 
 const styles = `
 .equal-height-card {
@@ -32,7 +32,7 @@ function ConfirmOrder() {
   const [error, setError] = useState("");
   const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [orderToRemove, setOrderToRemove] = useState(null);
-  const [orderToRemoveDisplayNumber, setOrderToRemoveDisplayNumber] = useState(null); // Store the display number
+  const [orderToRemoveDisplayNumber, setOrderToRemoveDisplayNumber] = useState(null);
   const [showTimeModal, setShowTimeModal] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState(null);
   const [estimatedTimeInput, setEstimatedTimeInput] = useState("");
@@ -59,17 +59,7 @@ function ConfirmOrder() {
 
   useEffect(() => {
     fetchOrders();
-    initializeOrderNumbers();
   }, []);
-
-  const initializeOrderNumbers = async () => {
-    try {
-      await axios.post("http://localhost:5000/initialize_counter");
-      await axios.post("http://localhost:5000/assign_missing_order_numbers");
-    } catch (error) {
-      console.log("Order number initialization completed:", error.response?.data || error.message);
-    }
-  };
 
   const fetchOrders = async () => {
     try {
@@ -89,104 +79,152 @@ function ConfirmOrder() {
     }
   };
 
-  const confirmOrder = async (orderId) => {
-    try {
-      const response = await axios.put("http://localhost:5000/confirm_order_status", { id: orderId });
-      const updatedOrder = response.data.order;
-      await fetchOrders();
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === orderId
-            ? { ...order, status: "Confirmed", orderNumber: updatedOrder.orderNumber }
-            : order
-        )
-      );
-      setCurrentOrderId(orderId);
-      setEstimatedTimeInput("");
-      setShowTimeModal(true);
-      setError("");
-    } catch (error) {
-      if (error.response) {
-        setError(`Failed to confirm order: ${error.response.data.msg || error.message}`);
-      } else if (error.request) {
-        setError("Failed to confirm order: No response from server.");
-      } else {
-        setError(`Failed to confirm order: ${error.message}`);
-      }
+const confirmOrder = async (orderId) => {
+  try {
+    // ✅ STEP 1: Update UI INSTANTLY (user sees immediate feedback)
+    setOrders(prevOrders => 
+      prevOrders.map(order => 
+        order._id === orderId 
+          ? { ...order, status: "Confirmed" }
+          : order
+      )
+    );
+    
+    // ✅ STEP 2: Show modal INSTANTLY (no waiting)
+    setCurrentOrderId(orderId);
+    setEstimatedTimeInput("");
+    setShowTimeModal(true);
+    
+    // ✅ STEP 3: Update server in BACKGROUND
+    await axios.put("http://localhost:5000/confirm_order_status", { id: orderId });
+    
+    // ✅ STEP 4: Silently refetch in background to get authoritative data
+    fetchOrders(); // No await - runs in background!
+    
+    setError("");
+  } catch (error) {
+    // ❌ On error, definitely refetch to fix UI
+    await fetchOrders();
+    if (error.response) {
+      setError(`Failed to confirm order: ${error.response.data.msg || error.message}`);
+    } else {
+      setError(`Failed to confirm order: ${error.message}`);
     }
-  };
+  }
+};
 
-  const handleSetTime = async () => {
-    if (!estimatedTimeInput || !currentOrderId) return;
-    try {
-      const response = await axios.post("http://localhost:5000/set_order_time", {
-        orderId: currentOrderId,
-        time: estimatedTimeInput,
-      });
-      const updatedOrder = response.data.order;
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === currentOrderId ? { ...order, estimatedTime: updatedOrder.estimatedTime } : order
-        )
-      );
-      setShowTimeModal(false);
-      setCurrentOrderId(null);
-      setEstimatedTimeInput("");
-      setError("");
-    } catch {
-      setError("Failed to set estimated time.");
-    }
-  };
+const handleSetTime = async () => {
+  if (!estimatedTimeInput || !currentOrderId) return;
+  try {
+    // ✅ STEP 1: Close modal INSTANTLY
+    setShowTimeModal(false);
+    
+    // ✅ STEP 2: Update UI INSTANTLY
+    setOrders(prevOrders =>
+      prevOrders.map(order =>
+        order._id === currentOrderId
+          ? { ...order, estimatedTime: estimatedTimeInput }
+          : order
+      )
+    );
+    
+    // ✅ STEP 3: Save to server in BACKGROUND
+    await axios.post("http://localhost:5000/set_order_time", {
+      orderId: currentOrderId,
+      time: estimatedTimeInput,
+    });
+    
+    // ✅ STEP 4: Silently refetch in background
+    fetchOrders(); // No await!
+    
+    setCurrentOrderId(null);
+    setEstimatedTimeInput("");
+    setError("");
+  } catch {
+    await fetchOrders(); // On error, refetch with await
+    setError("Failed to set estimated time.");
+  }
+};
 
-  const rejectOrder = async (orderId) => {
-    try {
-      await axios.put("http://localhost:5000/reject_order_status", { id: orderId });
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === orderId ? { ...order, status: "Rejected" } : order
-        )
-      );
-      setError("");
-    } catch {
-      setError("Failed to reject order.");
-    }
-  };
+const rejectOrder = async (orderId) => {
+  try {
+    // ✅ Instant UI update
+    setOrders(prevOrders =>
+      prevOrders.map(order =>
+        order._id === orderId
+          ? { ...order, status: "Rejected" }
+          : order
+      )
+    );
+    
+    // ✅ Background server update
+    await axios.put("http://localhost:5000/reject_order_status", { id: orderId });
+    
+    // ✅ Background refetch
+    fetchOrders(); // No await!
+    
+    setError("");
+  } catch {
+    await fetchOrders();
+    setError("Failed to reject order.");
+  }
+};
 
-  const markReady = async (orderId) => {
-    try {
-      await axios.post("http://localhost:5000/mark_ready", { orderId });
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === orderId ? { ...order, status: "Ready", estimatedTime: undefined } : order
-        )
-      );
-      setError("");
-    } catch {
-      setError("Failed to mark order as ready.");
-    }
-  };
+const markReady = async (orderId) => {
+  try {
+    // ✅ Instant UI update
+    setOrders(prevOrders =>
+      prevOrders.map(order =>
+        order._id === orderId
+          ? { ...order, status: "Ready", estimatedTime: undefined }
+          : order
+      )
+    );
+    
+    // ✅ Background server update
+    await axios.post("http://localhost:5000/mark_ready", { orderId });
+    
+    // ✅ Background refetch
+    fetchOrders(); // No await!
+    
+    setError("");
+  } catch {
+    await fetchOrders();
+    setError("Failed to mark order as ready.");
+  }
+};
 
-  const showRemoveConfirm = (order, displayOrderNumber) => {
-    setOrderToRemove(order);
-    setOrderToRemoveDisplayNumber(displayOrderNumber); // Store the current display number
-    setShowRemoveModal(true);
-  };
-
+const showRemoveConfirm = (order, displayOrderNumber) => {
+  setOrderToRemove(order);
+  setOrderToRemoveDisplayNumber(displayOrderNumber);
+  setShowRemoveModal(true);
+};
 
 const confirmRemoveOrder = async () => {
-    if (!orderToRemove) return;
-    try {
-      await axios.delete(`http://localhost:5000/remove_order/${orderToRemove._id}`);
-      // Just remove the order from state, don't recalculate order numbers
-      setOrders((prevOrders) => prevOrders.filter((order) => order._id !== orderToRemove._id));
-      setShowRemoveModal(false);
-      setOrderToRemove(null);
-      setOrderToRemoveDisplayNumber(null);
-      setError("");
-    } catch {
-      setError("Failed to remove order.");
-    }
-  };
+  if (!orderToRemove) return;
+  try {
+    // ✅ Instant UI update
+    setShowRemoveModal(false);
+    const removedOrderId = orderToRemove._id;
+    setOrderToRemove(null);
+    setOrderToRemoveDisplayNumber(null);
+    
+    setOrders(prevOrders => 
+      prevOrders.filter(order => order._id !== removedOrderId)
+    );
+    
+    // ✅ Background delete
+    await axios.delete(`http://localhost:5000/remove_order/${removedOrderId}`);
+    
+    // ✅ Background refetch
+    fetchOrders(); // No await!
+    
+    setError("");
+  } catch {
+    await fetchOrders();
+    setError("Failed to remove order.");
+  }
+};
 
   // Group orders by date string
   const groupOrdersByDate = (orders) => {
@@ -231,7 +269,6 @@ const confirmRemoveOrder = async () => {
           <>
             {sortedGroupKeys.map((date) => {
               const ordersForDate = groupedOrders[date];
-              // Use imported utility for global order number calculation
               const orderNumberMap = calculateGlobalOrderNumbersForDate(orders, date, formatLocalDate);
               const sortedOrdersForDate = sortOrdersForDisplay(ordersForDate, orderNumberMap);
 
@@ -431,7 +468,6 @@ const confirmRemoveOrder = async () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
     </>
   );
 }

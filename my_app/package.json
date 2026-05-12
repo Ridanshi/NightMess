@@ -19,6 +19,7 @@
     "express-session": "^1.18.1",
     "lucide-react": "^0.523.0",
     "multer": "^2.0.1",
+    "razorpay": "^2.9.6",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.0",

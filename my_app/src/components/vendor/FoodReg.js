@@ -58,7 +58,8 @@ function FoodReg() {
     try {
       const response = await fetch("http://localhost:5000/register_food", {
         method: "post",
-        body: formData
+        body: formData,
+        credentials: 'include'  // ✅ ADD ONLY THIS LINE
       });
 
       const result = await response.json();

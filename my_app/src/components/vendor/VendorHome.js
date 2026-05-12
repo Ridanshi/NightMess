@@ -29,19 +29,28 @@ function VendorHome() {
 
   const checkUser = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/isUser");
+      const res = await axios.get("http://localhost:5000/isUser", { 
+        withCredentials: true 
+      });
+      
       if (res.data.usertype === "vendor") {
-        const data = await axios.post("http://localhost:5000/get_vendors");
+        // ✅ FIX 1: Changed from POST to GET
+        // ✅ FIX 2: Changed from /get_vendors to /get_vendor (singular)
+        // ✅ FIX 3: Added withCredentials
+        const data = await axios.get("http://localhost:5000/get_vendor", {
+          withCredentials: true
+        });
+        
         console.log(data);
         setMessname(data.data.messname);
         setOwner(data.data.owner);
         setAddress(data.data.vendor_address);
         setContact(data.data.vendor_contact);
         setEmail(data.data.vendor_email);
-        setUsertype(data.data.usertype);
+        setUsertype(res.data.usertype);
         setResult("");
       } else {
-        navigate("/wrong_login");
+        alert("Invalid credentials");
       }
     } catch (err) {
       console.log(err);

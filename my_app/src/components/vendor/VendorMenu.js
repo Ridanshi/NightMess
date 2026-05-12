@@ -40,7 +40,7 @@ function VendorMenu() {
               </NavLink>
 
               <NavLink
-                to="/vendor/show_clients"
+                to="/vendor/recharge_client"
                 className={({ isActive }) =>
                   `nav-link px-3 ${isActive ? 'text-primary fw-bold border-bottom border-2 border-primary' : 'text-dark'}`
                 }

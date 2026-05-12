@@ -19,6 +19,7 @@ import MuiAlert from "@mui/material/Alert";
 import { useCart } from "./CartContext";
 import { useFoodContext } from "./FoodContext";
 import '../css/ClientHome.css';
+import Loader from './Loader';
 
 function ClientHome() {
   const [result, setResult] = useState("");
@@ -33,6 +34,12 @@ function ClientHome() {
 
   const { addToCart, getItemQuantityInCart } = useCart();
   const { foodItems: fooditems, refreshFoodItems, updateFoodQuantity, loading } = useFoodContext();
+
+  const [quickRecommendations, setQuickRecommendations] = useState([]);
+  const [recsLoading, setRecsLoading] = useState(true);
+  const [showRecommendations, setShowRecommendations] = useState(false); // ✅ ADD THIS LINE
+
+  const [orderHistoryCount, setOrderHistoryCount] = useState(0);
 
   useEffect(() => {
     refreshFoodItems();
@@ -56,6 +63,78 @@ function ClientHome() {
       setResult("Server error");
     }
   };
+
+
+useEffect(() => {
+  const fetchQuickRecommendations = async () => {
+    try {
+      setRecsLoading(true);
+      
+      console.log('🔍 Fetching quick recommendations...');
+      
+      const response = await fetch('http://localhost:5000/api/quick-recommendations', {
+        method: 'GET',
+        credentials: 'include',  // ✅ CRITICAL - Include session cookie
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        console.error('❌ Recommendations fetch failed:', response.status);
+        setShowRecommendations(false);
+        return;
+      }
+
+      const data = await response.json();
+      console.log('📊 Recommendations received:', data);
+
+      // ✅ Only show recommendations if there are any
+      if (Array.isArray(data) && data.length > 0) {
+        setQuickRecommendations(data);
+        setShowRecommendations(true);
+        console.log('✅ Showing', data.length, 'recommendations');
+      } else {
+        setQuickRecommendations([]);
+        setShowRecommendations(false);
+        console.log('ℹ️ No recommendations available');
+      }
+    } catch (error) {
+      console.error('❌ Error fetching quick recommendations:', error);
+      setQuickRecommendations([]);
+      setShowRecommendations(false);
+    } finally {
+      setRecsLoading(false);
+    }
+  };
+
+  fetchQuickRecommendations();
+}, []); // Empty dependency array - run once on mount
+
+
+useEffect(() => {
+  const fetchOrderHistory = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/show_orders', {
+        method: 'GET',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (response.ok) {
+        const orders = await response.json();
+        setOrderHistoryCount(orders.length);
+      }
+    } catch (error) {
+      console.error('Error fetching order history:', error);
+    }
+  };
+
+  fetchOrderHistory();
+}, []);
+
+
+
 
   // Filter foods by search, type, and category (using substring matching for category)
   const filteredItems = fooditems.filter((item) => {
@@ -119,6 +198,7 @@ function ClientHome() {
       }
       const response = await fetch("http://localhost:5000/addtocart", {
         method: "POST",
+        credentials: 'include',  // ✅ THIS IS CRITICAL
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           foodname: item.foodname,
@@ -150,12 +230,26 @@ function ClientHome() {
     }
   };
 
-  const handleManualRefresh = () => {
+const handleManualRefresh = () => {
     refreshFoodItems();
     setSnackMsg("Food items refreshed successfully!");
     setSnackSeverity("success");
     setSnackOpen(true);
   };
+
+  // Dynamic recommendation text based on order history
+  let recommendationText;
+  if (orderHistoryCount === 0) {
+    recommendationText = "Trending right now"; // New users
+  } else if (orderHistoryCount < 5) {
+    recommendationText = "You might also like"; // Few orders
+  } else {
+    recommendationText = "Based on your order history"; // Regular customers
+  }
+
+  if (loading) {
+    return <Loader />;
+  }
 
   if (loading && fooditems.length === 0) {
     return (
@@ -189,7 +283,7 @@ function ClientHome() {
   return (
     <>
       <ClientMenu />
-      
+
       {/* Enhanced Background Elements */}
       <div className="client-home-bg-elements">
         <div className="client-home-bg-element-1"></div>
@@ -212,13 +306,26 @@ function ClientHome() {
       {/* Header with tight spacing */}
       <Container className="mt-3 pt-2">
         <div className="text-center nightmess-title-section">
-          <h1 className="display-5 fw-bold mb-1">Welcome to nightMess</h1>
+          <h1 className="display-5 fw-bold mb-1">Welcome to NightMess</h1>
           <p className="lead text-muted">
             Satisfy your late-night cravings with our delicious comfort food
           </p>
         </div>
       </Container>
-      
+      {/* Add this right after the Welcome header */}
+<Container className="mt-3">
+  <Card 
+    className="shadow-sm border-0 overflow-hidden"
+    style={{
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      cursor: 'pointer'
+    }}
+    // Change this line in ClientHome.jsx
+onClick={() => window.location.href = '/client/mood-food'}  // ✅ CORRECT
+  >
+  </Card>
+</Container>
+
       {/* Search and Filters with Clear Filters button */}
       <Container className="mt-1">
         <h2 className="text-center mb-3">Search Food Items</h2>
@@ -239,7 +346,7 @@ function ClientHome() {
                 </Button>
               </InputGroup>
             </Col>
-            
+
             <Col xs={6} md={2}>
               <Form.Select
                 aria-label="Filter by Type"
@@ -253,7 +360,7 @@ function ClientHome() {
                 <option value="egg">Egg</option>
               </Form.Select>
             </Col>
-            
+
             <Col xs={6} md={3}>
               <Form.Select
                 aria-label="Filter by Category"
@@ -270,13 +377,14 @@ function ClientHome() {
                 <option value="uttapam">Uttapam</option>
                 <option value="idli">Idli</option>
                 <option value="omelete">Omelete</option>
+                <option value="puff">Puff</option>
               </Form.Select>
             </Col>
 
             <Col xs={12} md={1} className="d-flex justify-content-center">
-              <Button 
-                variant="outline-secondary" 
-                className="py-3 px-3" 
+              <Button
+                variant="outline-secondary"
+                className="py-3 px-3"
                 onClick={() => {
                   setFoodname("");
                   setSelectedType("");
@@ -298,6 +406,173 @@ function ClientHome() {
           </Row>
         )}
       </Container>
+
+      {showRecommendations && !recsLoading && quickRecommendations.length > 0 && !foodname && !selectedType && !selectedCategory && (
+        <Container className="py-4 mt-4">
+          <div className="mb-4">
+            <h3 className="mb-1" style={{
+              fontSize: '28px',
+              fontWeight: '700',
+              color: '#1a1a1a'
+            }}>
+              <i className="fas fa-star me-2" style={{ color: '#ff6b6b' }}></i>
+              Recommended For You
+            </h3>
+            <p className="mb-0 text-muted" style={{
+              fontSize: '14px',
+              marginLeft: '14px'
+            }}>
+              {recommendationText}
+            </p>
+          </div>
+
+          <Row className="g-3">
+            {quickRecommendations.slice(0, 4).map((item) => {
+              const remainingQty = getRemainingQuantity(item);
+              const isAvailable = isItemAvailable(item);
+
+              return (
+                <Col xs={12} sm={6} md={4} lg={2} key={item._id}>
+                  <Card
+                    className="shadow-sm border-0 rounded-3 h-100 overflow-hidden"
+                    style={{
+                      transform: 'translateY(0)',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-8px)';
+                      e.currentTarget.style.boxShadow = '0 12px 24px rgba(0,0,0,0.15)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                    }}
+                  >
+                    <div style={{ position: "relative", height: "90px", overflow: "hidden" }}>
+                      <Card.Img
+                        variant="top"
+                        src={`http://localhost:5000/public/images/${item.image}`}
+                        alt={item.foodname}
+                        style={{
+                          height: "100%",
+                          width: "100%",
+                          objectFit: "cover",
+                          transition: "transform 0.3s ease-in-out",
+                          filter: !isAvailable ? "grayscale(50%)" : "none",
+                        }}
+                        onMouseOver={(e) => isAvailable && (e.currentTarget.style.transform = "scale(1.1)")}
+                        onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                      />
+
+                      {/* Stock Badge */}
+                      {!isAvailable && (
+                        <div style={{ position: "absolute", top: "10px", right: "10px" }}>
+                          <Badge bg="danger" className="px-2 py-1" style={{ fontSize: '11px' }}>
+                            Out of Stock
+                          </Badge>
+                        </div>
+                      )}
+                      {isAvailable && remainingQty <= 5 && remainingQty > 0 && (
+                        <div style={{ position: "absolute", top: "10px", right: "10px" }}>
+                          <Badge bg="warning" className="px-2 py-1" style={{ fontSize: '11px' }}>
+                            {remainingQty} left
+                          </Badge>
+                        </div>
+                      )}
+
+                      {/* Food Type Logo */}
+                      <div style={{
+                        position: "absolute",
+                        top: "8px",
+                        left: "10px",
+                        background: 'white',
+                        borderRadius: '4px',
+                        padding: '1px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                      }}>
+                        <img
+                          src={
+                            item.type === "veg"
+                              ? "/veg.png"
+                              : item.type === "non-veg"
+                                ? "/nonveg.png"
+                                : "/egg.jpg"
+                          }
+                          alt={item.type}
+                          style={{
+                            width: '18px',
+                            height: '14px',
+                            objectFit: 'contain',
+                            display: 'block',
+                            border: '1px', // thickness + solid border
+                            borderColor:
+                              item.type === "veg"
+                                ? 'green'
+                                : item.type === "non-veg"
+                                  ? 'red'
+                                  : 'gold', // yellow for egg
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    <Card.Body className="d-flex flex-column justify-content-between p-2">
+                      <div>
+                        <Card.Title className="mb-2">
+                          <span className="fw-bold text-dark" style={{ fontSize: '14px' }}>
+                            {item.foodname}
+                          </span>
+                        </Card.Title>
+                        <Button
+                          variant="outline-secondary"
+                          size="sm"
+                          className="w-100 mb-2"
+                          style={{
+                            padding: '6px',
+                            fontSize: '13px',
+                            borderRadius: '8px'
+                          }}
+                          onClick={() => handleOpenDialog(item.des)}
+                        >
+                          <i className="fas fa-list-ul me-1"></i>
+                          Ingredients
+                        </Button>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center mt-2">
+                        <div className="fw-bold" style={{ fontSize: '16px', color: '#1a1a1a' }}>
+                          ₹{item.price}
+                        </div>
+                        <Button
+                          variant={isAvailable ? "dark" : "secondary"}
+                          onClick={() => handleAddToCart(item)}
+                          size="sm"
+                          style={{
+                            borderRadius: '8px',
+                            padding: '6px 12px',
+                            fontSize: '13px',
+                            fontWeight: '600'
+                          }}
+                          disabled={!isAvailable}
+                        >
+                          {isAvailable ? (
+                            <>
+                              <i className="fas fa-cart-plus me-1"></i>
+                              Add
+                            </>
+                          ) : (
+                            "N/A"
+                          )}
+                        </Button>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              );
+            })}
+          </Row>
+        </Container>
+      )}
 
       {filteredItems.length > 0 && (
         <Container className="py-5">
@@ -344,13 +619,12 @@ function ClientHome() {
                                 : "/egg.jpg"
                           }
                           alt={item.type}
-                          className={`food-type-logo ${
-                            item.type === "veg"
+                          className={`food-type-logo ${item.type === "veg"
                               ? "veg"
                               : item.type === "non-veg"
                                 ? "nonveg"
                                 : "egg"
-                          }`}
+                            }`}
                         />
                       </div>
                     </div>

@@ -4,7 +4,10 @@ import axios from "axios";
 import MedMenu from "./ClientMenu";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import './EditProfile.css';
+import Loader from './Loader';
 
+// ✅ CRITICAL FIX: Configure axios to include credentials
+axios.defaults.withCredentials = true;
 
 function EditProfile() {
     let history = useNavigate();
@@ -17,45 +20,57 @@ function EditProfile() {
     useEffect(() => {
         console.log(id);
         displayClient();
-    }, []);
+    }, []); // ✅ Also add displayClient to dependencies: }, [displayClient]);
 
-    const displayClient = async (e) => {
-        let clientdata = await axios.get("http://localhost:5000/get_client");
-        console.log("clientdata: ", clientdata.data);
-        const client = clientdata.data;
-        if (client) {
-            setName(client.clientname);
-            setContact(client.client_contact);
-        } else {
-            setResult("Data Not Found");
+    const displayClient = async () => {
+        try {
+            // ✅ FIX: Use axios with credentials
+            let clientdata = await axios.get("http://localhost:5000/get_client", {
+                withCredentials: true  // ✅ Include credentials
+            });
+            console.log("clientdata: ", clientdata.data);
+            const client = clientdata.data;
+            if (client && client.clientname) {  // ✅ Better validation
+                setName(client.clientname);
+                setContact(client.client_contact);
+            } else {
+                setResult("Data Not Found");
+            }
+        } catch (err) {
+            console.error("Error fetching client data:", err);
+            setResult("Failed to load profile data");
         }
     };
 
     const handleOnSubmit = async (e) => {
         e.preventDefault();
-        let result = await fetch("http://localhost:5000/update_client_profile", {
-            method: "post",
-            body: JSON.stringify({ name, contact }),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        result = await result.json();
-        console.log(result);
+        
+        try {
+            // ✅ FIX: Use axios instead of fetch, with credentials
+            const result = await axios.post(
+                "http://localhost:5000/update_client_profile",
+                { name, contact },
+                { withCredentials: true }  // ✅ Include credentials
+            );
+            
+            console.log(result.data);
 
-        if (result) {
-            setResult("Data Updated successfully!");
-            setName(name);
-            setContact(contact);
-        } else {
-            setResult("Data cannot be changed");
+            if (result.data.data === 'success') {
+                setResult("Profile updated successfully!");
+                // ✅ Optional: Refresh the data from server to confirm
+                displayClient();
+            } else {
+                setResult("Data cannot be changed");
+            }
+        } catch (err) {
+            console.error("Error updating profile:", err);
+            setResult("Failed to update profile");
         }
     };
 
     return (
         <>
             <MedMenu />
-            {/* Add class for container spacing and bubble background */}
             <Container className="mt-4 editprofile-container">
                 <Row className="justify-content-center">
                     <Col md={8} lg={6}>
@@ -68,6 +83,7 @@ function EditProfile() {
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     placeholder="Enter your name"
+                                    required
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
@@ -77,6 +93,8 @@ function EditProfile() {
                                     value={contact}
                                     onChange={(e) => setContact(e.target.value)}
                                     placeholder="Enter contact number"
+                                    required
+                                    maxLength={10}
                                 />
                             </Form.Group>
                             <div className="d-grid">
@@ -86,14 +104,18 @@ function EditProfile() {
                             </div>
                         </Form>
                         {result && (
-                            <Alert className="mt-4" variant={result.includes("successfully") ? "success" : "danger"}>
+                            <Alert 
+                                className="mt-4" 
+                                variant={result.includes("successfully") ? "success" : "danger"}
+                            >
                                 {result}
                             </Alert>
                         )}
                     </Col>
                 </Row>
             </Container>
-            {/* Add bubble divs outside Container for background bubbles */}
+            
+            {/* Background bubbles */}
             <div className="editprofile-bg-element-1"></div>
             <div className="editprofile-bg-element-2"></div>
             <div className="editprofile-bg-element-3"></div>

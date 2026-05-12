@@ -3,26 +3,26 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "tw:init": "tailwindcss init"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "connect-mongo": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.4",
     "express": "^5.1.0",
-    "express-session": "^1.18.1",
+    "express-session": "^1.18.2",
     "mongodb": "^6.17.0",
     "mongoose": "^6.10.0",
-    "multer": "^2.0.1"
+    "multer": "^2.0.1",
+    "razorpay": "^2.9.6",
+    "resend": "^6.6.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
-  },
-  "scripts": {
-  "tw:init": "tailwindcss init"
-}
-
+  }
 }

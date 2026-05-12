@@ -1,5 +1,7 @@
 import React from 'react';
 import { ThreeDots } from 'react-loader-spinner'; // Make sure this is installed
+import './Loader.css'
+
 
 function Loader() {
   return (

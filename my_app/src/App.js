@@ -30,6 +30,8 @@ import Orders from './components/client/Orders';
 import ConfirmOrder from './components/vendor/ConfirmOrder';
 import Footer from './components/Footer';
 
+import NightmessSelection from './components/client/NightmessSelection';
+
 // Layout component for client routes including Footer and Outlet for nested routes
 function ClientLayout() {
   return (
@@ -58,7 +60,7 @@ function App() {
             <Route path="/admin/register_admin" element={<AdminReg />} />
             <Route path="/admin/show_admins" element={<ShowAdmins />} />
             <Route path="/admin/register_vendors" element={<VendorReg />} />
-            <Route path="/edit_vendors/:id" element={<EditVendor />} />
+            <Route path="/edit-vendor/:email" element={<EditVendor />} />
             <Route path="/delete_vendors/:id" element={<DeleteVendors />} />
             <Route path="/admin/show_vendors" element={<ShowVendors />} />
             <Route path="/admin/edit_admin" element={<Editprof />} />
@@ -68,9 +70,11 @@ function App() {
             <Route path="/vendor/order_food" element={<FoodReg />} />
             <Route path="/vendor/orders" element={<ConfirmOrder />} />
             <Route path="/vendor/edit_vendor" element={<Editprofvendor />} />
-            <Route path="/vendor/show_clients" element={<ShowClients />} />
+            <Route path="/vendor/recharge_client" element={<RechargeClient />} />
             <Route path="/vendor/recharge_client/:client_email" element={<RechargeClient />} />
             <Route path="/vendor/avail_food" element={<AvailableFood />} />
+
+            <Route path="/select-nightmess" element={<NightmessSelection />} />
 
             {/* Client Routes wrapped with ClientLayout */}
             <Route path="/client" element={<ClientLayout />}>

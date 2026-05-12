@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Eye, EyeOff } from "lucide-react";
 import './Login.css';
+import axios from 'axios';
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -12,35 +13,39 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const handleOnSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      let result = await fetch('http://localhost:5000/check_login', {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      result = await result.json();
-      if (result == null) {
-        setMsg("Invalid Email and/or Password");
+const handleOnSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await axios.post('/check_login', 
+      { email, password },
+      { withCredentials: true }  // ✅ ADD THIS
+    );
+    
+    console.log("Login response:", response.data);
+    
+    const ut = response.data.usertype;
+    if (ut === "admin") {
+      navigate('/admin/adminhome', { replace: true });
+    } else if (ut === "vendor") {
+      navigate('/vendor/vendorhome', { replace: true });
+    } else if (ut === "client") {
+      if (response.data.hasSelectedMess) {
+        navigate('/client', { replace: true });
       } else {
-        let ut = result.usertype;
-        if (ut === "admin") {
-          navigate('/admin/adminhome', { replace: true });
-        } else if (ut === "vendor") {
-          navigate('/vendor/vendorhome', { replace: true });
-        } else if(ut === "client") {
-          navigate('/client/clienthome', {replace: true});
-        } else {
-          setMsg("Contact admin for access");
-        }
+        navigate('/select-nightmess', { replace: true });
       }
-    } catch (error) {
-      console.error(error);
-      setMsg("Server error");
+    } else {
+      setMsg("Contact admin for access");
     }
-  };
+  } catch (error) {
+    console.error("Login error:", error);
+    if (error.response?.status === 401) {
+      setMsg("Invalid Email and/or Password");
+    } else {
+      setMsg("Server error. Please try again.");
+    }
+  }
+};
 
   const handleSignupClick = () => {
     navigate('/'); // Navigate to signup page

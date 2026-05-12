@@ -3,16 +3,16 @@ import axios from "axios";
 import { Container, Row, Col, Card, Image, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ClientMenu from "./ClientMenu";
-import './Orders.css'; // Import the minimal CSS
-import { calculateGlobalOrderNumbersForDate } from "../vendor/OrderUtils"; // Adjust path if needed
+import './Orders.css';
+import Loader from './Loader';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const [allOrders, setAllOrders] = useState([]); // Store all orders for numbering
+  const [allOrders, setAllOrders] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [loading, setLoading] = useState(true);
   const pollingRef = useRef(null);
 
-  // Format Date to local YYYY-MM-DD string
   const formatLocalDate = (date) => {
     const d = new Date(date);
     const year = d.getFullYear();
@@ -23,25 +23,25 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-      // Fetch user's orders
-      const userOrdersRes = await axios.get("http://localhost:5000/show_orders");
+      const userOrdersRes = await axios.get("http://localhost:5000/show_orders", {
+        withCredentials: true
+      });
 
-      // Fetch all orders (for global numbering) - same endpoint as vendor uses
-      const allOrdersRes = await axios.get("http://localhost:5000/show_orders_vendor");
+      const allOrdersRes = await axios.get("http://localhost:5000/show_all_orders_for_numbering", {
+        withCredentials: true
+      });
 
       if (userOrdersRes.data.data === "Failed") {
         setIsLoggedIn(false);
         setOrders([]);
         setAllOrders([]);
       } else {
-        // Sort user orders by creation timestamp (newest first for display)
         const sortedUserOrders = userOrdersRes.data.sort((a, b) => {
           const timeA = new Date(a.createdAt || a._id);
           const timeB = new Date(b.createdAt || b._id);
-          return timeB - timeA; // Newest first for display
+          return timeB - timeA;
         });
 
-        // Store all orders for global numbering calculation
         const filteredAllOrders = allOrdersRes.data.filter(
           (o) =>
             o.status === "Confirmed" ||
@@ -54,7 +54,16 @@ const Orders = () => {
         setAllOrders(filteredAllOrders);
       }
     } catch (error) {
-      console.error(error);
+      if (error.response?.status === 401) {
+      console.log('Session not ready, will retry in 10 seconds...');
+      return; // Don't log error, just skip this poll
+      }
+    console.error(error);
+    } finally {
+      // ✅ Add 1 second delay before hiding loader
+      setTimeout(() => {
+        setLoading(false);
+      }, 50);
     }
   };
 
@@ -64,7 +73,6 @@ const Orders = () => {
     return () => clearInterval(pollingRef.current);
   }, []);
 
-  // Group orders by creation date
   const groupOrdersByDate = (orders) => {
     const groups = {};
     orders.forEach((order) => {
@@ -77,16 +85,43 @@ const Orders = () => {
     return groups;
   };
 
-  // Use imported utility for consistent global order number calculation
-  const calculateGlobalOrderNumbers = (date) =>
-    calculateGlobalOrderNumbersForDate(allOrders, date, formatLocalDate);
+  // ✅ FIXED: Calculate order numbers PER MESS
+  const calculateGlobalOrderNumbers = (date, vendorEmail) => {
+    const ordersForDate = allOrders.filter((o) => {
+      const oDateStr = o.createdAt
+        ? formatLocalDate(o.createdAt)
+        : formatLocalDate(new Date(parseInt(o._id.substring(0, 8), 16) * 1000));
+      // ✅ Filter by BOTH date AND vendor email
+      return oDateStr === date && o.vendor_email === vendorEmail;
+    });
+
+    const confirmedOrReady = ordersForDate.filter(
+      (o) => o.status === "Confirmed" || o.status === "Ready"
+    );
+
+    const sortedOrders = confirmedOrReady.sort((a, b) => {
+      const timeA = new Date(a.createdAt);  // ✅ ONLY createdAt
+      const timeB = new Date(b.createdAt);  // ✅ ONLY createdAt
+      return timeA - timeB;
+    });
+
+    const numberMap = {};
+    sortedOrders.forEach((order, index) => {
+      numberMap[order._id] = index + 1;
+    });
+    return numberMap;
+  };
 
   const groupedOrders = groupOrdersByDate(orders);
 
-  // Sort dates descending (newest dates first)
   const sortedGroupDates = Object.keys(groupedOrders).sort(
     (a, b) => new Date(b) - new Date(a)
   );
+
+  if (loading) {
+    return <Loader />;
+  }
+
 
   return (
     <>
@@ -118,14 +153,15 @@ const Orders = () => {
           <>
             {sortedGroupDates.map((date) => {
               const ordersForDate = groupedOrders[date];
-              const globalOrderNumberMap = calculateGlobalOrderNumbers(date);
 
               return (
                 <div key={date} className="date-section">
                   <h5>Orders for {date}</h5>
                   <Row xs={1} md={2} lg={3} className="g-4">
                     {ordersForDate.map((order) => {
-                      // Show GLOBAL display order number only if confirmed or ready
+                      // ✅ FIXED: Pass vendor_email to get correct order number per mess
+                      const globalOrderNumberMap = calculateGlobalOrderNumbers(date, order.vendor_email);
+
                       const displayOrderNumber =
                         order.status === "Confirmed" || order.status === "Ready"
                           ? globalOrderNumberMap[order._id]
@@ -188,9 +224,7 @@ const Orders = () => {
                                     <span className="badge bg-success">Ready</span>
                                   ) : (
                                     <span
-                                      className={`badge ${
-                                        order.status === "Rejected" ? "bg-danger" : "bg-info"
-                                      }`}
+                                      className={`badge ${order.status === "Rejected" ? "bg-danger" : "bg-info"}`}
                                     >
                                       {order.status}
                                     </span>
@@ -200,6 +234,16 @@ const Orders = () => {
                                   <small>
                                     Order Time:{" "}
                                     {new Date(order.createdAt || order._id).toLocaleTimeString()}
+                                  </small>
+                                </Col>
+                                <Col xs={12} className="text-center mt-1">
+                                  <small className="text-muted">
+                                    <strong>{order.messname || 'Mess Name Not Available'}</strong>
+                                  </small>
+                                </Col>
+                                <Col xs={12} className="text-center">
+                                  <small className="text-muted">
+                                    📍 {order.vendor_address || 'Address Not Available'}
                                   </small>
                                 </Col>
                               </Row>

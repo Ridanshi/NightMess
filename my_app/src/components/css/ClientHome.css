@@ -112,7 +112,7 @@
 /* Main Container */
 .edit-profile-container {
   min-height: calc(100vh - 10vh);
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #94a3b8 75%, #64748b 100%);
+  background: #ffffff;
   position: relative;
   overflow: hidden;
   padding: 3rem 0;
@@ -727,6 +727,9 @@ body::before {
     margin-bottom: 20px !important;
   }
 }
+
+
+
 
 
 

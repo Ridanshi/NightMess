@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { User, Phone, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import "./DarkTheme.css";
 
 
@@ -18,59 +19,84 @@ function Signup() {
   // New state for phone error message
   const [phoneError, setPhoneError] = useState("");
 
+  // Add navigate hook
+  const navigate = useNavigate();
+
 
   const handleOnSubmit = async (e) => {
-    e.preventDefault();
-    setMsg("");
-    setPhoneError("");
+  e.preventDefault();
+  setMsg("");
+  setPhoneError("");
 
+  // Validate phone number: must be exactly 10 digits
+  const phoneRegex = /^[0-9]{10}$/;
+  if (!phoneRegex.test(contact)) {
+    setPhoneError("Phone number must be exactly 10 digits.");
+    return;
+  }
 
-    // Validate phone number: must be exactly 10 digits
-    const phoneRegex = /^[0-9]{10}$/;
-    if (!phoneRegex.test(contact)) {
-      setPhoneError("Phone number must be exactly 10 digits.");
-      return;
-    }
+  // Password match check
+  if (password !== confirmpass) {
+    setMsg("Oops! Your passwords don't match. Please re-enter them.");
+    return;
+  }
 
+  // Password strength check
+  const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+  if (!strongRegex.test(password)) {
+    setMsg("Please choose a stronger password: at least 8 characters, with uppercase, lowercase, number, and special character.");
+    return;
+  }
 
-    // Password match check
-    if (password !== confirmpass) {
-      setMsg("Oops! Your passwords don't match. Please re-enter them.");
-      return;
-    }
+  try {
+    const res = await fetch("http://localhost:5000/register_client", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",  // ✅ ONLY FIX: Added this line
+      body: JSON.stringify({ name, contact, email, password })
+    });
 
+    const data = await res.json();
+    console.log(data);
 
-    // Password strength check
-    const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-    if (!strongRegex.test(password)) {
-      setMsg("Please choose a stronger password: at least 8 characters, with uppercase, lowercase, number, and special character.");
-      return;
-    }
+    if (!res.ok) {
+      setMsg(data.msg || "An error occurred during registration.");
+    } else {
+      setMsg(data.msg || "Account created successfully!");
+      
+      // ✅ NEW: Log the user in after successful registration
+      try {
+        const loginRes = await fetch("http://localhost:5000/check_login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",  // ✅ CRITICAL: Include credentials
+          body: JSON.stringify({ email, password })
+        });
 
-
-    try {
-      const res = await fetch("http://localhost:5000/register_client", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, contact, email, password })
-      });
-
-
-      const data = await res.json();
-      console.log(data);
-
-
-      if (!res.ok) {
-        setMsg(data.msg || "An error occurred during registration.");
-      } else {
-        setMsg(data.msg || "Account created successfully!");
+        if (loginRes.ok) {
+          // Wait a moment to show success message, then redirect
+          setTimeout(() => {
+            navigate("/select-nightmess");
+          }, 1500);
+        } else {
+          // Registration succeeded but login failed - redirect to login page
+          setTimeout(() => {
+            navigate("/login");
+          }, 1500);
+        }
+      } catch (loginErr) {
+        console.error("Auto-login failed:", loginErr);
+        // Redirect to login page if auto-login fails
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
       }
-    } catch (err) {
-      console.error(err);
-      setMsg("Server error occurred. Please try again.");
     }
-  };
-
+  } catch (err) {
+    console.error(err);
+    setMsg("Server error occurred. Please try again.");
+  }
+};
 
   return (
     <div className={`signup-container ${isDark ? 'dark' : 'light'}`}>

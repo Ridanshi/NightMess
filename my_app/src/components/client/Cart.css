@@ -331,3 +331,266 @@
     display: none;
   }
 }
+
+/* Order Summary Title - Dark Green Theme */
+.order-summary-title {
+  color: #065f46 !important; /* dark green */
+  font-weight: 700;
+  font-size: 2rem;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Underline below Order Summary */
+.order-summary-title::after {
+  content: '';
+  display: block;
+  width: 70px;
+  height: 3px;
+  margin: 10px auto 0;
+  background: linear-gradient(
+    90deg,
+    #064e3b,
+    #10b981,
+    #064e3b
+  );
+  border-radius: 2px;
+}
+
+/* ========================================
+   PAYMENT MODAL STYLES - Local CSS Only
+   ======================================== */
+
+/* Payment Modal Dialog */
+.payment-modal-dialog {
+  max-width: 480px;
+}
+
+/* Payment Modal Content */
+.payment-modal-content {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+/* Payment Modal Header */
+.payment-modal-header {
+  background: #fff;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payment-modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #1f2937;
+  font-family: inherit;
+}
+
+.payment-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.payment-modal-close:hover {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+/* Payment Modal Body */
+.payment-modal-body {
+  padding: 1.25rem;
+  background: #fff;
+}
+
+/* Payment Info Box */
+.payment-info-box {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 0.875rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.payment-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.625rem;
+}
+
+.payment-info-row:last-child {
+  margin-bottom: 0;
+}
+
+.payment-info-label {
+  font-size: 0.9375rem;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.payment-info-value {
+  font-size: 1.0625rem;
+  color: #111827;
+  font-weight: 600;
+}
+
+.payment-wallet-balance {
+  font-size: 1.0625rem;
+  color: #10b981;
+  font-weight: 600;
+}
+
+/* Payment Button Base */
+.payment-btn {
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  position: relative;
+  font-family: inherit;
+  box-shadow: none;
+}
+
+.payment-btn:hover:not(.payment-btn-disabled) {
+  opacity: 0.9;
+}
+
+.payment-btn:active:not(.payment-btn-disabled) {
+  transform: scale(0.98);
+}
+
+/* Wallet Payment Button - Matching "Proceed to Payment" green */
+.payment-wallet-btn {
+  background: #198754;
+  color: white;
+  margin-bottom: 0.875rem;
+}
+
+.payment-wallet-btn:hover:not(.payment-btn-disabled) {
+  background: #157347;
+}
+
+/* Disabled Wallet Button */
+.payment-btn-disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.payment-btn-disabled:hover {
+  opacity: 0.7;
+}
+
+/* Razorpay Payment Button - Lighter Orange matching "Continue Shopping" */
+.payment-razorpay-btn {
+  background: #fb923c;
+  color: white;
+}
+
+.payment-razorpay-btn:hover {
+  background: #f97316;
+}
+
+/* Button Icon - removed emojis, buttons will be text-only */
+.payment-btn-icon {
+  display: none;
+}
+
+/* Button Text */
+.payment-btn-text {
+  flex: 1;
+  text-align: center;
+}
+
+/* Insufficient Balance Badge */
+.payment-insufficient-badge {
+  display: block;
+  margin-top: 0.5rem;
+  background: #fee2e2;
+  color: #ff6b35;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 4px;
+  font-weight: 400;
+  text-align: center;
+}
+
+/* Payment Divider */
+.payment-divider {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.payment-divider-line {
+  flex: 1;
+  height: 1px;
+  background: #d1d5db;
+}
+
+.payment-divider-text {
+  padding: 0 0.875rem;
+  color: #9ca3af;
+  font-size: 0.8125rem;
+  font-weight: 400;
+}
+
+/* Mobile Responsive */
+@media (max-width: 576px) {
+  .payment-modal-dialog {
+    margin: 0.75rem;
+  }
+  
+  .payment-modal-header {
+    padding: 0.875rem 1.125rem;
+  }
+  
+  .payment-modal-title {
+    font-size: 1.125rem;
+  }
+  
+  .payment-modal-body {
+    padding: 1.125rem;
+  }
+  
+  .payment-btn {
+    padding: 0.675rem 1.125rem;
+    font-size: 0.9375rem;
+  }
+  
+  .payment-info-label {
+    font-size: 0.875rem;
+  }
+  
+  .payment-info-value,
+  .payment-wallet-balance {
+    font-size: 1rem;
+  }
+}

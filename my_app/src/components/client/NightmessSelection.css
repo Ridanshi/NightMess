@@ -1,0 +1,778 @@
+/* Import Poppins Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px);
+  }
+  50% { 
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% { 
+    opacity: 0.25; 
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.6; 
+    transform: scale(1.05);
+  }
+  100% { 
+    opacity: 0.25; 
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes drift {
+  0%, 100% {
+    transform: translateX(0px) translateY(0px);
+  }
+  25% {
+    transform: translateX(20px) translateY(-15px);
+  }
+  50% {
+    transform: translateX(-10px) translateY(-25px);
+  }
+  75% {
+    transform: translateX(15px) translateY(-10px);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes slowFloat {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px);
+  }
+  25% { 
+    transform: translateY(-8px) translateX(5px);
+  }
+  50% { 
+    transform: translateY(-15px) translateX(0px);
+  }
+  75% { 
+    transform: translateY(-8px) translateX(-5px);
+  }
+}
+
+@keyframes bounceFloat {
+  0%, 100% { 
+    transform: translateY(0px) scale(1);
+  }
+  50% { 
+    transform: translateY(-20px) scale(1.02);
+  }
+}
+
+/* ==================== MAIN CONTAINER ==================== */
+.selection-container {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: #ffffff !important;
+  padding: 4rem 2rem;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: all 0.7s ease;
+}
+
+/* Background Base */
+.selection-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffffff !important;  /* ✅ CHANGED from linear-gradient to white */
+  z-index: -1;
+}
+
+/* ==================== BACKGROUND BUBBLES ==================== */
+.selection-container::before {
+  content: '';
+  position: fixed;
+  top: -60px;
+  right: -60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(251, 146, 60, 0.4);
+  animation: shimmer 6s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.selection-container::after {
+  content: '';
+  position: fixed;
+  bottom: -60px;
+  left: -60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(249, 115, 22, 0.35);
+  animation: shimmer 6s ease-in-out infinite 3s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login-bg-element-1 {
+  position: fixed;
+  top: 20%;
+  right: 15%;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(251, 146, 60, 0.35);
+  animation: float 8s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login-bg-element-2 {
+  position: fixed;
+  bottom: 30%;
+  left: 10%;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(249, 115, 22, 0.28);
+  animation: float 6s ease-in-out infinite 2s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login-bg-element-3 {
+  position: fixed;
+  top: 15%;
+  left: 8%;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: rgba(255, 237, 213, 0.8);
+  animation: drift 12s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login-bg-element-4 {
+  position: fixed;
+  top: 60%;
+  right: 30%;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(251, 146, 60, 0.4);
+  animation: pulse 4s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login-bg-element-5 {
+  position: fixed;
+  top: 45%;
+  left: 5%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(251, 146, 60, 0.45);
+  animation: slowFloat 10s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login-bg-element-6 {
+  position: fixed;
+  top: 10%;
+  right: 45%;
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+  background: rgba(249, 115, 22, 0.4);
+  animation: bounceFloat 7s ease-in-out infinite 1s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login-bg-element-7 {
+  position: fixed;
+  bottom: 15%;
+  right: 8%;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: rgba(255, 237, 213, 0.7);
+  animation: drift 14s ease-in-out infinite 2s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login-bg-element-8 {
+  position: fixed;
+  top: 35%;
+  left: 25%;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background: rgba(251, 146, 60, 0.5);
+  animation: pulse 5s ease-in-out infinite 3s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login-bg-element-9 {
+  position: fixed;
+  bottom: 45%;
+  right: 50%;
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  background: rgba(249, 115, 22, 0.38);
+  animation: float 9s ease-in-out infinite 1.5s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login-bg-element-10 {
+  position: fixed;
+  top: 75%;
+  left: 35%;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  background: rgba(255, 237, 213, 0.75);
+  animation: shimmer 8s ease-in-out infinite 2.5s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ==================== HEADER SECTION ==================== */
+.header-section {
+  position: relative;
+  z-index: 10;
+  animation: fadeInDown 0.8s ease-out;
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.selection-title {
+  color: #f97316 !important;
+  font-size: 3.5rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.75rem;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: -0.5px;
+}
+
+.selection-subtitle {
+  color: #9ca3af !important;
+  font-size: 1.25rem !important;
+  margin-bottom: 0;
+  font-weight: 400;
+  font-family: 'Poppins', sans-serif;
+}
+
+.nightmess-title-section {
+  margin-bottom: 48px !important;
+}
+
+/* ==================== CARDS - CLEAN MODERN DESIGN ==================== */
+.nightmess-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(249, 115, 22, 0.15) !important;
+  box-shadow: 0 4px 20px rgba(249, 115, 22, 0.08) !important;
+  border-radius: 20px !important;
+  animation: fadeInUp 0.8s ease-out;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nightmess-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #f97316 0%, #fb923c 50%, #fdba74 100%);
+  border-radius: 20px 20px 0 0;
+  z-index: 1;
+}
+
+.nightmess-card:nth-child(1) { animation-delay: 0.1s; }
+.nightmess-card:nth-child(2) { animation-delay: 0.2s; }
+.nightmess-card:nth-child(3) { animation-delay: 0.3s; }
+
+.nightmess-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(249, 115, 22, 0.18) !important;
+  border-color: rgba(249, 115, 22, 0.3) !important;
+}
+
+/* Card Image Container */
+.card-image-container {
+  height: 180px;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.05) 0%, rgba(251, 146, 60, 0.08) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px 20px 0 0;
+  padding: 0.5rem;
+}
+
+.card-image-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+}
+
+/* Actual Image Styling */
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+  border-radius: 16px;
+  filter: drop-shadow(0 4px 12px rgba(249, 115, 22, 0.15));
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nightmess-card:hover .card-image {
+  transform: scale(1.03);
+  filter: drop-shadow(0 6px 16px rgba(249, 115, 22, 0.25));
+}
+
+/* Fallback Icon (when no image) */
+.card-icon-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.card-icon-fallback .icon {
+  font-size: 5rem;
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(249, 115, 22, 0.25));
+}
+
+.nightmess-card:hover .card-icon-fallback .icon {
+  transform: scale(1.1) rotate(5deg);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Card Content */
+.card-content {
+  padding: 1.75rem 1.5rem 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.card-title {
+  color: #f97316 !important;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 1.25rem;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: -0.3px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Location Badge */
+.location-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(249, 115, 22, 0.08) !important;
+  border: 1.5px solid rgba(249, 115, 22, 0.2) !important;
+  color: #ea580c !important;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+}
+
+.location-badge i {
+  color: #f97316;
+  font-size: 1.1rem;
+}
+
+.nightmess-card:hover .location-badge {
+  background: rgba(249, 115, 22, 0.12) !important;
+  border-color: rgba(249, 115, 22, 0.3) !important;
+  transform: translateY(-2px);
+}
+
+/* Card Details */
+.card-details {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+}
+
+.detail-item {
+  color: #6b7280 !important;
+  font-size: 0.9rem !important;
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  align-items: baseline;
+}
+
+.detail-item:last-child {
+  margin-bottom: 0;
+}
+
+.detail-item strong {
+  color: #4b5563 !important;
+  font-weight: 600 !important;
+  font-family: 'Poppins', sans-serif;
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+.text-brown {
+  color: #4b5563 !important;
+}
+
+/* Card Footer */
+.card-footer-custom {
+  padding: 0 1.5rem 1.75rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* ==================== BUTTONS ==================== */
+.select-btn {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+  border: none !important;
+  padding: 0.875rem 1.5rem !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #ffffff !important;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.3px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.select-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transition: left 0.6s;
+}
+
+.select-btn:hover::before {
+  left: 100%;
+}
+
+.select-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4) !important;
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%) !important;
+}
+
+.select-btn:focus {
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2) !important;
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%) !important;
+  outline: none;
+}
+
+.select-btn:active {
+  transform: translateY(0);
+}
+
+.select-btn i {
+  transition: transform 0.3s ease;
+  font-size: 1.1rem;
+}
+
+.select-btn:hover i {
+  transform: translateX(4px);
+}
+
+/* ==================== ALERTS ==================== */
+.custom-alert {
+  backdrop-filter: blur(15px);
+  border-radius: 14px !important;
+  border: none !important;
+  font-weight: 600;
+  animation: fadeInUp 0.5s ease-out;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Poppins', sans-serif;
+  padding: 1.25rem 1.5rem;
+  font-size: 1rem;
+  position: relative;
+  z-index: 10;
+}
+
+.custom-alert.alert-danger {
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #dc2626 !important;
+  border: 1px solid rgba(239, 68, 68, 0.25) !important;
+}
+
+.custom-alert.alert-info {
+  background: rgba(249, 115, 22, 0.12) !important;
+  color: #ea580c !important;
+  border: 1px solid rgba(249, 115, 22, 0.25) !important;
+}
+
+.custom-alert.alert-success {
+  background: rgba(34, 197, 94, 0.12) !important;
+  color: #15803d !important;
+  border: 1px solid rgba(34, 197, 94, 0.25) !important;
+}
+
+/* ==================== LOADING ==================== */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 107, 0, 0.1);
+  border-top-color: #ff6b00;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 20px;
+  color: #ff6b00;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+selection-container {
+  padding: 40px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Header */
+.header-section {
+  text-align: center;
+  margin-bottom: 50px;
+  padding-top: 20px;
+}
+
+.selection-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #ff6b00;
+  margin-bottom: 15px;
+  font-family: 'Poppins', sans-serif;
+  text-shadow: 2px 2px 4px rgba(255, 107, 0, 0.1);
+}
+
+.selection-subtitle {
+  font-size: 1.25rem;
+  color: #666;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 768px) {
+  .selection-container {
+    padding: 3rem 1rem;
+  }
+
+  .selection-title {
+    font-size: 2.5rem !important;
+  }
+
+  .selection-subtitle {
+    font-size: 1.1rem !important;
+  }
+
+  .card-title {
+    font-size: 1.5rem !important;
+  }
+
+  .card-image-container {
+    height: 180px;
+  }
+
+  .card-icon-fallback .icon {
+    font-size: 3.5rem;
+  }
+
+  .select-btn {
+    padding: 0.75rem 1.25rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  .nightmess-title-section {
+    margin-bottom: 32px !important;
+  }
+
+  .card-content {
+    padding: 1.5rem 1.25rem 0.75rem;
+  }
+
+  .card-footer-custom {
+    padding: 0 1.25rem 1.5rem;
+  }
+
+  .login-bg-element-1,
+  .login-bg-element-2,
+  .login-bg-element-3,
+  .login-bg-element-4 {
+    width: 80px;
+    height: 80px;
+  }
+
+  .selection-container::before,
+  .selection-container::after {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+@media (max-width: 576px) {
+  .selection-title {
+    font-size: 2rem !important;
+  }
+
+  .selection-subtitle {
+    font-size: 1rem !important;
+  }
+
+  .card-content {
+    padding: 1.25rem 1rem 0.75rem;
+  }
+
+  .card-footer-custom {
+    padding: 0 1rem 1.25rem;
+  }
+
+  .select-btn {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.9rem !important;
+  }
+
+  .login-bg-element-3,
+  .login-bg-element-4,
+  .login-bg-element-7,
+  .login-bg-element-8,
+  .login-bg-element-9,
+  .login-bg-element-10 {
+    display: none;
+  }
+}
+
+/* ==================== SMOOTH TRANSITIONS ==================== */
+.selection-container * {
+  transition: all 0.3s ease;
+}
+
+.select-btn:focus {
+  outline: none;
+}
+
+/* Main content container */
+.selection-container .container {
+  position: relative;
+  z-index: 10;
+  animation: fadeInScale 1s ease-out;
+  background: transparent !important;
+  max-width: 1200px;
+}
+
+/* Remove Bootstrap's default container background */
+.container,
+.container-fluid {
+  background: transparent !important;
+}

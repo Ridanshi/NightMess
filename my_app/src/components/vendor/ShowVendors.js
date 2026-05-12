@@ -41,19 +41,19 @@ function ShowVendors() {
           <tbody>
             {med.length > 0 ? (
               med.map((m) => (
-                <tr key={m.email}>
+                <tr key={m.vendor_email}>
                   <td>{m.messname}</td>
                   <td>{m.owner}</td>
                   <td>{m.vendor_address}</td>
                   <td>{m.vendor_contact}</td>
                   <td>{m.vendor_email}</td>
                   <td className="text-center">
-                    <Link to={`../edit_vendors/${m.email}`}>
+                    <Link to={`/edit-vendor/${encodeURIComponent(m.vendor_email)}`}>
                       <Button variant="success" size="sm" className="w-100">Edit</Button>
                     </Link>
                   </td>
                   <td className="text-center">
-                    <Link to={`../delete_vendors/${m.email}`}>
+                    <Link to={`../delete_vendors/${m.vendor_email}`}>
                       <Button variant="danger" size="sm" className="w-100">Delete</Button>
                     </Link>
                   </td>
@@ -61,7 +61,7 @@ function ShowVendors() {
               ))
             ) : (
               <tr>
-                <td colSpan="8" className="text-center text-muted">
+                <td colSpan="7" className="text-center text-muted">
                   No mess data found.
                 </td>
               </tr>

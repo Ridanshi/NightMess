@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const FoodContext = createContext();
 
@@ -14,37 +14,42 @@ export const FoodProvider = ({ children }) => {
   const [foodItems, setFoodItems] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch food items from API
-  const fetchFoodItems = async () => {
+  // ✅ FIXED: Wrap in useCallback to prevent infinite loops
+  const refreshFoodItems = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/get_foods", {
-        method: "GET",
+      const response = await fetch('http://localhost:5000/get_foods', {
+        method: 'GET',
+        credentials: 'include',  // ✅ Include credentials for session
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         }
       });
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await res.json();
+      
+      const data = await response.json();
+      
       if (Array.isArray(data)) {
         setFoodItems(data);
-        console.log("Food items refreshed:", data);
+        console.log("Food items refreshed:", data.length, "items");
+        console.log("📋 Food items data:", data); 
       } else {
         console.error("Unexpected data format:", data);
         setFoodItems([]);
       }
-    } catch (err) {
-      console.error("Failed to load food data:", err);
+    } catch (error) {
+      console.error('Error fetching food items:', error);
       setFoodItems([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, []); // Empty deps since it doesn't depend on any props or state
 
-  // Update individual food quantity in state
-  const updateFoodQuantity = (foodId, newQuantity) => {
+  // ✅ FIXED: Wrap in useCallback
+  const updateFoodQuantity = useCallback((foodId, newQuantity) => {
     setFoodItems(prevItems =>
       prevItems.map(item =>
         item._id === foodId
@@ -52,26 +57,20 @@ export const FoodProvider = ({ children }) => {
           : item
       )
     );
-  };
+  }, []); // Empty deps since it uses functional update
 
-  const refreshFoodItems = () => {
-    console.log("Refreshing food items...");
-    fetchFoodItems();
-  };
-
+  // ✅ FIXED: Now refreshFoodItems won't cause infinite loops
   useEffect(() => {
-    fetchFoodItems();
-    // Only run on mount
-    // eslint-disable-next-line
-  }, []);
+    refreshFoodItems();
+  }, [refreshFoodItems]);
 
-  const value = {
+  // ✅ FIXED: useMemo to prevent value object recreation on every render
+  const value = React.useMemo(() => ({
     foodItems,
     loading,
-    fetchFoodItems,
-    updateFoodQuantity,
-    refreshFoodItems
-  };
+    refreshFoodItems,
+    updateFoodQuantity
+  }), [foodItems, loading, refreshFoodItems, updateFoodQuantity]);
 
   return (
     <FoodContext.Provider value={value}>
