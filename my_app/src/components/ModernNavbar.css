@@ -1,0 +1,200 @@
+/* Animations */
+@keyframes pulse {
+  0%, 100% { 
+    opacity: 0.2; 
+  }
+  50% { 
+    opacity: 0.4; 
+  }
+}
+
+@keyframes rotate {
+  from { 
+    transform: translate(-50%, -50%) rotate(0deg); 
+  }
+  to { 
+    transform: translate(-50%, -50%) rotate(360deg); 
+  }
+}
+
+/* Container Styles */
+.navbar-container {
+  height: 10vh;
+  transition: all 0.7s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.navbar-container.dark {
+  background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+
+}
+
+
+
+/* Background Elements
+.background-element-1 {
+  position: absolute;
+  top: -160px;
+  right: -160px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.dark .background-element-1 {
+  background: rgba(147, 51, 234, 0.35);
+} */
+
+/* .background-element-2 {
+  position: absolute;
+  bottom: -160px;
+  left: -160px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  animation: pulse 4s ease-in-out infinite 2s;
+}
+
+
+.background-element-3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  animation: rotate 20s linear infinite;
+}
+
+.dark .background-element-3 {
+  background: linear-gradient(45deg, rgba(147, 51, 234, 0.1), rgba(236, 72, 153, 0.1));
+} */
+
+
+/* Theme Toggle
+.theme-toggle-wrapper {
+  position: absolute;
+  top: 12px;
+  right: 24px;
+  transform: translateY(-30%);
+  z-index: 20;
+}
+
+.theme-toggle-button {
+  padding: 5px;
+  border-radius: 50%;
+  backdrop-filter: blur(10px);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
+
+/* Main Content */
+.main-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.content-wrapper {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Brand Section */
+.brand-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.logo-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-bottom: 16px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.dark .logo-circle {
+  background: conic-gradient(from 180deg, #ff6b35, #f7931e, #ff6b35);
+}
+
+.logo-text {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.brand-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+}
+
+.dark .brand-title {
+  color: #ffffff;
+}
+
+.light .brand-title {
+  color: #1f2937;
+}
+
+.brand-subtitle {
+  font-size: 14px;
+  margin: 0;
+}
+
+.dark .brand-subtitle {
+  color: #d1d5db;
+}
+
+.light .brand-subtitle {
+  color: #6b7280;
+}
+
+
+/* Input Groups */
+.input-group {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.dark .input-icon {
+  color: #9ca3af;
+}
+
+.light .input-icon {
+  color: #6b7280;
+}
+
+/* Input Focus States */
+.dark .form-input:focus {
+  border-color: #b35c1e;
+  box-shadow: 0 0 0 3px rgba(130, 88, 36, 0.589);
+}
+
+.light .form-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
