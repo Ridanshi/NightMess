@@ -1,14 +1,15 @@
 <div align="center">
 
-<h1>🌙 NightMess</h1>
-<p><strong>A modern hostel canteen ordering & management platform</strong></p>
+# NightMess
 
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=flat-square&logo=node.js)](https://nodejs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=flat-square&logo=mongodb)](https://mongodb.com/)
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?style=flat-square&logo=bootstrap)](https://getbootstrap.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+**Full-stack canteen ordering platform for university hostels**
+
+[![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express_5-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://mongodb.com/)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap_5-7952B3?style=flat-square&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 
 </div>
 
@@ -16,300 +17,135 @@
 
 ## Overview
 
-NightMess is a full-stack canteen management platform designed for university hostels. It streamlines the entire food ordering workflow — from browsing menus and placing orders to real-time ETA updates and automatic wallet-based payments.
+University hostel canteens typically run on paper tokens, verbal orders, and no real-time visibility. NightMess replaces that with a digital ordering system where students browse live menus, pay from a mess-specific wallet, and receive email notifications as their order moves from pending → confirmed → ready.
 
-The platform supports **multiple messes** (canteens), each operating independently under a shared admin umbrella. Students use a **per-mess digital wallet** to pay instantly, vendors manage orders and menus in real time, and administrators oversee the entire ecosystem.
+Three distinct roles interact with the platform: **students** who order food, **mess vendors** who manage menus and fulfill orders, and **administrators** who oversee the full ecosystem. Each role gets a purpose-built dashboard with the exact controls it needs.
 
 ---
 
-## Features
+## Core Features
 
-### For Students (Clients)
-- Browse and filter menus by food type and category
-- Add items to cart with live stock tracking
-- Personalized food recommendations based on order history
-- Per-mess digital wallet with recharge request flow
-- Real-time order tracking with ETA updates
-- Order cancellation with automatic refunds
-- Email notifications for order acceptance, rejection, and readiness
+**Student (Client)**
+- Browse and filter the live menu of their selected mess by type and category
+- Add items to cart with real-time stock enforcement — cart syncs against live inventory
+- Per-mess digital wallet: separate balance for each canteen, topped up via a vendor-approved recharge flow
+- Full order lifecycle tracking: Pending → Confirmed (with ETA) → Ready for Pickup
+- Cancel pending orders with automatic wallet refund
+- Personalized food recommendations based on personal order history
+- Email notifications on order acceptance, rejection, and readiness
 
-### For Vendors (Mess Owners)
-- Full menu management — add, edit, enable/disable items
-- Accept or reject incoming orders with optional ETA
-- Real-time order dashboard with pending/confirmed/ready states
-- Approve or reject student wallet recharge requests
-- Per-mess revenue and transaction tracking
+**Vendor (Mess Owner)**
+- Add and manage food items with image uploads; toggle availability without deleting items
+- Incoming order dashboard: accept with optional ETA, reject with instant client refund, or mark ready
+- Approve or reject student wallet recharge requests with full audit trail
+- Per-item stock quantity management
 
-### For Administrators
-- Register and manage vendors and admins
-- View all clients, vendors, and transaction records
-- Platform-wide oversight and access control
+**Admin**
+- Register and manage vendor accounts and admin accounts
+- View all clients and vendors across the platform
+- Platform-level access control
+
+---
+
+## Engineering Highlights
+
+**Role-based access control via session middleware**  
+All routes are guarded by server-side session checks (`req.session.isLoggedIn`, `req.session.usertype`). Role enforcement happens at the API layer — not just in the UI — so vendor and admin routes are inaccessible regardless of what the frontend sends.
+
+**Per-mess wallet isolation**  
+Each client document stores an embedded `mess_wallets` array — one subdocument per vendor, each with its own balance. This models the real-world constraint where money paid to one mess cannot be used at another. Order payment uses a MongoDB `$elemMatch` + `$inc` update with an atomic balance check to prevent race conditions between concurrent order placements.
+
+**Cart and inventory sync**  
+Adding to cart immediately decrements backend stock. Increasing cart quantity re-checks available stock. Removing an item or cancelling an order returns stock. This keeps the frontend display in sync with actual availability without a separate reservation system.
+
+**Order state machine with ETA and refunds**  
+Orders move through discrete statuses: `Pending → Confirmed → Ready` or `Pending → Rejected`. Rejection atomically refunds the order total back to the correct mess wallet. Vendor-set ETA is stored on the order and surfaced to the client in real time.
+
+**Recharge approval workflow**  
+Students submit a recharge request for a specific mess; the vendor sees pending requests on their dashboard and approves or rejects. Approved requests atomically credit the correct mess wallet. This models a cash-to-digital flow without a payment gateway.
+
+**Transactional email notifications**  
+Resend sends structured HTML emails on order confirmation (with ETA), rejection (with refund confirmation), and order ready events. Email failures are caught and logged without blocking the API response.
+
+**Recommendation engine**  
+A Python-based collaborative filtering script (`backend/recommended.py`) processes historical order data to surface personalized food suggestions on the client home screen. The Node.js backend spawns this process and returns ranked results via a REST endpoint.
+
+**State management**  
+Cart state and food data are managed through React Context (`CartContext`, `FoodContext`), scoped to authenticated sessions. Context updates propagate across the component tree without prop drilling, keeping the cart count and menu availability consistent across pages.
+
+---
+
+## Screenshots
+
+> _Add screenshots here: student menu page, cart and checkout, vendor order dashboard, admin panel, and the wallet recharge flow._
 
 ---
 
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
-| Frontend | React 19, React Router v7, Bootstrap 5, Tailwind CSS, MUI |
+|---|---|
+| Frontend | React 19, React Router v7, Bootstrap 5, Tailwind CSS, Material UI |
 | Backend | Node.js, Express 5 |
 | Database | MongoDB, Mongoose |
-| Session | express-session with connect-mongo |
-| Email | Resend (transactional emails) |
-| File Upload | Multer |
-| Icons | React Icons, Lucide React |
+| Auth / Sessions | express-session, connect-mongo |
+| File Uploads | Multer |
+| Email | Resend |
+| Recommendations | Python (collaborative filtering) |
 
 ---
 
-## Project Structure
+## Challenges & Learnings
 
-```
-nightmess/
-├── backend/                  # Express API server
-│   ├── public/
-│   │   └── Images/           # Uploaded food item images
-│   ├── index.js              # All routes, schemas, and server config
-│   ├── recommended.py        # ML-based recommendation engine
-│   ├── orders_data.csv       # Sample training data for recommendations
-│   └── package.json
-│
-└── my_app/                   # React frontend
-    ├── public/
-    ├── src/
-    │   ├── components/
-    │   │   ├── admin/        # Admin dashboard components
-    │   │   ├── vendor/       # Vendor dashboard components
-    │   │   ├── client/       # Client (student) components
-    │   │   ├── Login.js
-    │   │   ├── Signup.js
-    │   │   └── Footer.js
-    │   ├── App.js            # Routes and context providers
-    │   └── index.js
-    ├── tailwind.config.js
-    └── package.json
-```
+**Atomic wallet operations**  
+The biggest design challenge was preventing a user from double-spending during concurrent requests. The solution was a single MongoDB update operation that combines the `$elemMatch` balance check and `$inc` decrement — if the balance is insufficient the update modifies zero documents, which the API uses as a signal to reject the order without a separate read-then-write race.
 
----
+**Cart state across two data layers**  
+The cart lives in MongoDB (persisted), but the food context lives in React state (ephemeral). Keeping them consistent — especially when another user buys the last item — required designing the backend to be the source of truth and having the frontend re-fetch inventory on every cart operation rather than managing optimistic local state.
 
-## Getting Started
+**Session-based auth in a SPA context**  
+Cookie-based sessions with `httpOnly`, `sameSite: lax`, and CORS `credentials: true` required careful alignment between Express and the React fetch calls. Every protected API call explicitly sends `withCredentials: true`; misconfigurations here were a significant early debugging challenge.
 
-### Prerequisites
+**Multi-role routing**  
+Three roles share one frontend application. Route protection is layered: the backend rejects unauthorized API calls, and the frontend checks `/isUser` on mount to redirect unauthenticated or wrong-role users before rendering protected pages.
 
-- [Node.js](https://nodejs.org/) v18 or higher
-- [MongoDB](https://www.mongodb.com/) running locally or a [MongoDB Atlas](https://www.mongodb.com/atlas) connection string
-- [npm](https://www.npmjs.com/) v9 or higher
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/Ridanshi/NightMess.git
-cd NightMess
-```
-
-### 2. Set up the backend
-
-```bash
-cd backend
-npm install
-cp .env.example .env
-# Edit .env with your values (see Environment Variables section)
-npm run dev
-```
-
-The backend starts at **http://localhost:5000**
-
-### 3. Set up the frontend
-
-```bash
-cd my_app
-npm install
-npm start
-```
-
-The frontend starts at **http://localhost:3000**
-
----
-
-## Environment Variables
-
-Create a `.env` file inside the `backend/` directory based on `.env.example`:
-
-```env
-# MongoDB connection string
-MONGODB_URI=mongodb://localhost:27017/nightMess
-
-# Session secret — use a long random string in production
-SESSION_SECRET=your_super_secret_session_key_here
-
-# Resend API key for transactional emails
-RESEND_API_KEY=re_your_resend_api_key_here
-
-# Port (optional, defaults to 5000)
-PORT=5000
-
-# Frontend origin for CORS
-CLIENT_ORIGIN=http://localhost:3000
-```
-
-> **Never commit your `.env` file.** It is already listed in `.gitignore`.
-
----
-
-## API Overview
-
-All endpoints are prefixed with `http://localhost:5000`.
-
-### Authentication
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/check_login` | Login with email + password |
-| `GET` | `/isUser` | Get current session user |
-| `GET` | `/logout` | Destroy session |
-| `POST` | `/change_pass` | Change password |
-
-### Registration
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/register_admin` | Register admin |
-| `POST` | `/register_client` | Register student |
-| `POST` | `/register_vendors` | Register vendor |
-
-### Food & Cart
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/get_foods` | Get food items (filtered by selected mess) |
-| `POST` | `/register_food` | Add food item (vendor) |
-| `POST` | `/update_food_status` | Enable/disable food item |
-| `POST` | `/update_food_quantity` | Update stock quantity |
-| `POST` | `/addtocart` | Add item to cart |
-| `GET` | `/show_cartdata` | Get current user's cart |
-| `PUT` | `/update_cart_quantity` | Update item quantity in cart |
-| `DELETE` | `/remove_from_cart/:id` | Remove item from cart |
-| `DELETE` | `/clear_cart` | Clear entire cart |
-
-### Orders
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/confirm_order` | Place order from cart |
-| `GET` | `/show_orders` | Client's order history |
-| `GET` | `/show_orders_vendor` | Vendor's incoming orders |
-| `PUT` | `/confirm_order_status` | Accept order with optional ETA |
-| `PUT` | `/reject_order_refund/:id` | Reject order + refund wallet |
-| `PUT` | `/mark_order_ready/:id` | Mark order as ready for pickup |
-| `POST` | `/set_order_time` | Update estimated time |
-| `PUT` | `/cancel_order/:id` | Client cancels pending order |
-
-### Wallet & Recharge
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/client_balance` | Get wallet balance for selected mess |
-| `POST` | `/request_recharge` | Request wallet top-up |
-| `GET` | `/get_recharge_requests` | Vendor views pending requests |
-| `PUT` | `/approve_recharge/:id` | Vendor approves recharge |
-| `PUT` | `/reject_recharge/:id` | Vendor rejects recharge |
-
-### Recommendations
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/quick-recommendations` | Get personalized food suggestions |
-
----
-
-## Roles & Access Control
-
-```
-Admin
-  ├── Register/manage vendors and admins
-  ├── View all clients
-  └── Platform oversight
-
-Vendor
-  ├── Manage food menu (add/edit/toggle items)
-  ├── Process incoming orders (accept/reject/ready)
-  ├── Approve student wallet recharges
-  └── View order history
-
-Client (Student)
-  ├── Browse mess menu
-  ├── Add to cart and place orders
-  ├── Track order status in real time
-  └── Manage per-mess wallet balance
-```
-
----
-
-## Screenshots
-
-> _Add screenshots of the following pages to showcase the UI:_
-> - Student menu browsing page
-> - Cart and checkout flow
-> - Vendor order management dashboard
-> - Admin panel
-> - Wallet recharge flow
+**Order number assignment**  
+Per-mess daily order numbers (1, 2, 3... restarting each day) are assigned at confirmation time. This required querying confirmed orders within a UTC day window for the same vendor, sorting by confirmation timestamp, and assigning the next sequential slot — with a fallback if the order wasn't found in the window.
 
 ---
 
 ## Deployment
 
-### Backend (Railway / Render / Fly.io)
+| Component | Platform |
+|---|---|
+| Frontend | Vercel / Netlify (static build) |
+| Backend API | Railway / Render / Fly.io |
+| Database | MongoDB Atlas |
+| File Storage | Server filesystem (upgrade path: S3) |
+| Email | Resend |
 
-1. Set all required environment variables in the platform dashboard.
-2. Point `MONGODB_URI` to your MongoDB Atlas cluster.
-3. Set `CLIENT_ORIGIN` to your deployed frontend URL.
-4. Deploy from the `backend/` directory.
-
-### Frontend (Vercel / Netlify)
-
-1. Update the API base URL in the frontend to your deployed backend URL.
-2. Deploy from the `my_app/` directory.
-3. Set build command: `npm run build` and publish directory: `build`.
+Environment variables are documented in [`backend/.env.example`](backend/.env.example). No secrets are committed to the repository.
 
 ---
 
-## Contributing
+## Local Setup
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) to get started.
+```bash
+# Clone
+git clone https://github.com/Ridanshi/NightMess.git && cd NightMess
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'feat: add your feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
+# Backend
+cd backend && npm install
+cp .env.example .env   # fill in MONGODB_URI, SESSION_SECRET, RESEND_API_KEY
+npm run dev            # http://localhost:5000
 
----
-
-## Future Scope
-
-- [ ] Real-time order updates via WebSockets
-- [ ] Mobile app (React Native)
-- [ ] QR code-based order pickup
-- [ ] Analytics dashboard for vendors
-- [ ] Multi-campus support
-- [ ] Payment gateway integration (Razorpay/UPI)
-- [ ] Push notifications (PWA)
-- [ ] Mess rating and review system
-
----
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-## Author
-
-**Ridanshi**  
-GitHub: [@Ridanshi](https://github.com/Ridanshi)
+# Frontend (new terminal)
+cd my_app && npm install
+npm start              # http://localhost:3000
+```
 
 ---
 
 <div align="center">
-<sub>Built for university hostels that deserve better than paper tokens and long queues.</sub>
+<sub>Built by <a href="https://github.com/Ridanshi">Ridanshi</a></sub>
 </div>
