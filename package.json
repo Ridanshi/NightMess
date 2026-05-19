@@ -1,0 +1,19 @@
+{
+  "name": "nightmess",
+  "version": "1.0.0",
+  "description": "Hostel canteen ordering and management platform",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install --prefix backend && npm install --prefix my_app",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm start --prefix my_app",
+    "start:backend": "npm start --prefix backend",
+    "build:frontend": "npm run build --prefix my_app"
+  },
+  "author": "Ridanshi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ridanshi/NightMess.git"
+  }
+}

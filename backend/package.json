@@ -1,14 +1,15 @@
 {
-  "name": "backend",
+  "name": "nightmess-backend",
   "version": "1.0.0",
+  "description": "NightMess backend API — hostel canteen ordering and management platform",
   "main": "index.js",
   "scripts": {
-    "tw:init": "tailwindcss init"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["canteen", "hostel", "food-ordering", "express", "mongodb"],
+  "author": "Ridanshi",
+  "license": "MIT",
   "dependencies": {
     "connect-mongo": "^6.0.0",
     "cookie-parser": "^1.4.7",

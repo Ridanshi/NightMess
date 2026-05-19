@@ -3,12 +3,10 @@
 require('dotenv').config();  // ✅ ADD THIS AS THE FIRST LINE
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/', {
-  dbName: 'nightMess',
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}, err => err ? console.log(err) :
-  console.log('Connected to database successfully'));
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/nightMess';
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('Connected to database successfully'))
+  .catch(err => console.error('Database connection error:', err));
 
 
 
@@ -291,14 +289,14 @@ var cookieParser = require('cookie-parser');
 const fs = require('fs');
 const { spawn } = require('child_process');
 const { Resend } = require('resend');
-const resend = new Resend('re_9evQ2Ro8_LhPFU43pJyT94vodm694zZZ1');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const app = express();
 const cors = require("cors");
 
 // ✅ CRITICAL FIX: Configure CORS to allow credentials
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -309,7 +307,7 @@ app.use(cookieParser());
 
 // ✅ CRITICAL FIX: Properly configure express-session
 app.use(session({
-  secret: '5cad5475e2fa2ac74fb96923f6fb8a9673cbdb3e8fca065f4cd03dd44888f32d',
+  secret: process.env.SESSION_SECRET || 'change_this_in_production',
   resave: false,
   saveUninitialized: false,
   name: 'sessionId',  // ✅ ADD THIS
@@ -322,17 +320,8 @@ app.use(session({
   }
 }));
 
-console.log("service started at http://localhost:5000");
-
-
-app.get("/debug_session", async (req, res) => {
-  console.log("=== SESSION DEBUG ===");
-  console.log("Session:", req.session);
-  res.json({
-    session: req.session,
-    isLoggedIn: req.session.isLoggedIn || false
-  });
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
 
 
 app.post("/check_login", async (req, res) => {
@@ -3449,6 +3438,3 @@ app.get("/show_clients_amt", async (req, resp) => {
 
 
 module.exports = app;
-
-//start server on port 5000
-app.listen(5000);
