@@ -313,11 +313,11 @@ app.use(session({
   saveUninitialized: false,
   name: 'sessionId',  // ✅ ADD THIS
   cookie: {
-    secure: false,
+    secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000,
-    sameSite: 'lax',
-    path: '/' // ✅ ADD THIS LINE
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    path: '/'
   }
 }));
 
