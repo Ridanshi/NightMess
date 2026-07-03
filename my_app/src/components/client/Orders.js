@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import API from 'axiosConfig';
 import { Container, Row, Col, Card, Image, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";

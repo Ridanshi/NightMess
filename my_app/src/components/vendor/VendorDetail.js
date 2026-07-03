@@ -1,4 +1,4 @@
-﻿// src/components/VendorDetail.js
+// src/components/VendorDetail.js
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import API from 'axiosConfig';

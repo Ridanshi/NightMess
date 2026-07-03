@@ -1,4 +1,4 @@
-﻿import API from 'axiosConfig';
+import API from 'axiosConfig';
 import { useState, useEffect } from "react";
 import VendorMenu from "../vendor/VendorMenu";
 import { Button, Container, Table, Alert, Spinner } from "react-bootstrap";

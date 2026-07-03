@@ -1,4 +1,4 @@
-﻿import AdmMenu from "./AdmMenu";
+import AdmMenu from "./AdmMenu";
 import API from 'axiosConfig';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Container, Row, Col, Card, Form, Button, Alert, Image, Spinner } from "react-bootstrap";
 import VendorMenu from "./VendorMenu";
 

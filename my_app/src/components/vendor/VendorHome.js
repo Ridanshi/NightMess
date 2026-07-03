@@ -1,4 +1,4 @@
-﻿import VendorMenu from "./VendorMenu";
+import VendorMenu from "./VendorMenu";
 import API from 'axiosConfig';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
