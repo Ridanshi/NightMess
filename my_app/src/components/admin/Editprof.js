@@ -5,7 +5,7 @@ import AdmMenu from "./AdmMenu";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 
 // ✅ CRITICAL FIX: Configure axios to include credentials globally
-axios.defaults.withCredentials = true;
+
 
 function Editprof() {
     let history = useNavigate();

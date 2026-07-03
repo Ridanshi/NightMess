@@ -7,7 +7,7 @@ import './EditProfile.css';
 import Loader from './Loader';
 
 // ✅ CRITICAL FIX: Configure axios to include credentials
-axios.defaults.withCredentials = true;
+
 
 function EditProfile() {
     let history = useNavigate();

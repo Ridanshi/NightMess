@@ -4,7 +4,7 @@ import API from 'axiosConfig';
 import { Container, Form, Button, Card, Alert, Table, Badge, Tabs, Tab, Modal } from "react-bootstrap";
 import VendorMenu from "../vendor/VendorMenu";
 
-axios.defaults.withCredentials = true;
+
 
 function RechargeClient() {
   const { client_email } = useParams();
