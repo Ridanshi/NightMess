@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { User, Phone, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./DarkTheme.css";
+import API from "axiosConfig";
 
 
 function Signup() {
@@ -49,31 +50,19 @@ function Signup() {
   }
 
   try {
-    const res = await fetch("/register_client", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",  // ✅ ONLY FIX: Added this line
-      body: JSON.stringify({ name, contact, email, password })
-    });
-
-    const data = await res.json();
+    const res = await API.post("/register_client", { name, contact, email, password });
+    const data = res.data;
     console.log(data);
 
-    if (!res.ok) {
+    if (res.status >= 400) {
       setMsg(data.msg || "An error occurred during registration.");
     } else {
       setMsg(data.msg || "Account created successfully!");
-      
-      // ✅ NEW: Log the user in after successful registration
-      try {
-        const loginRes = await fetch("/check_login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",  // ✅ CRITICAL: Include credentials
-          body: JSON.stringify({ email, password })
-        });
 
-        if (loginRes.ok) {
+      try {
+        const loginRes = await API.post("/check_login", { email, password });
+
+        if (loginRes.status < 400) {
           // Wait a moment to show success message, then redirect
           setTimeout(() => {
             navigate("/select-nightmess");
