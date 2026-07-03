@@ -16,9 +16,9 @@ function Login() {
 const handleOnSubmit = async (e) => {
   e.preventDefault();
   try {
-    const response = await axios.post('/check_login', 
+    const response = await axios.post('/check_login',
       { email, password },
-      { withCredentials: true }  // ✅ ADD THIS
+      { withCredentials: true, timeout: 10000 }
     );
     
     console.log("Login response:", response.data);

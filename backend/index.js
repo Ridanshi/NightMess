@@ -3,7 +3,7 @@
 require('dotenv').config();  // ✅ ADD THIS AS THE FIRST LINE
 
 const mongoose = require('mongoose');
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/nightMess';
+const MONGODB_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/nightMess';
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('Connected to database successfully'))
   .catch(err => console.error('Database connection error:', err));
@@ -289,6 +289,7 @@ var cookieParser = require('cookie-parser');
 const fs = require('fs');
 const { spawn } = require('child_process');
 const { Resend } = require('resend');
+const bcrypt = require('bcrypt');
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const app = express();
@@ -330,9 +331,14 @@ app.post("/check_login", async (req, res) => {
         const ps = req.body.password;
         console.log("Login attempt for:", em);
         
-        const user = await LoginData.findOne({ email: em, password: ps });
-        
+        const user = await LoginData.findOne({ email: em });
+
         if (!user) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        const passwordMatch = await bcrypt.compare(ps, user.password);
+        if (!passwordMatch) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
@@ -408,8 +414,9 @@ app.post("/register_admin", async (req, res) => {
     const pass2 = req.body.cpassword;
     const utype = "admin";
 
+    const hashedPass = await bcrypt.hash(pass1, 10);
     const ad1 = new AdminData({ name: nm, address: adr, contact: mobile, email: em });
-    const lgn = new LoginData({ email: em, password: pass1, usertype: utype });
+    const lgn = new LoginData({ email: em, password: hashedPass, usertype: utype });
 
     let result = await ad1.save();
     let result1 = await lgn.save();
@@ -455,16 +462,17 @@ app.post("/register_client", async (req, resp) => {
       });
     }
 
-    const newClient = new ClientData({ 
-      clientname: name, 
-      client_contact: contact, 
-      client_email: email, 
+    const hashedPass = await bcrypt.hash(password, 10);
+    const newClient = new ClientData({
+      clientname: name,
+      client_contact: contact,
+      client_email: email,
       client_password: password,
       last_selected_vendor: null,           // ← ADD THIS
       last_selected_nightmess_id: null,     // ← ADD THIS
       mess_wallets: []                       // ← ADD THIS
     });
-    const lgn = new LoginData({ email: email, password: password, usertype: utype });
+    const lgn = new LoginData({ email: email, password: hashedPass, usertype: utype });
 
     let result = await newClient.save();
     let result1 = await lgn.save();
@@ -508,10 +516,11 @@ app.post("/register_vendors", async (req, res) => {
     const pass2 = req.body.cpassword;
     const utype = "vendor";
 
+    const hashedPass = await bcrypt.hash(pass1, 10);
     const ad1 = new VendorData({ messname: nm, owner: own, vendor_address: adr, vendor_contact: mobile, vendor_email: em });
     // 'nm' is the variable that is locally declared, i.e. in try box. 'storename' is the variable that is being created in the medical schema.
     // In 'ShowMed' the variables used will of medical schema as they store the collection of data.
-    const lgn = new LoginData({ email: em, password: pass1, usertype: utype });
+    const lgn = new LoginData({ email: em, password: hashedPass, usertype: utype });
 
     let result = await ad1.save();
     let result1 = await lgn.save();
@@ -835,16 +844,23 @@ app.post("/delete_vendors", async (req, resp) => {
 app.post("/change_pass", async (req, resp) => {
   try {
     if (req.session.isLoggedIn) {
-      const em = req.session.email
+      const em = req.session.email;
       const old = req.body.curr;
       const ps = req.body.pass;
-      //const con=req.body.confirm;
-      const filter = { email: em, password: old };
 
-      const update = { password: ps };
-      console.log(update);
-      const result = await LoginData.findOneAndUpdate(filter, update, { new: true });
-      console.log(result);
+      const user = await LoginData.findOne({ email: em });
+      if (!user) {
+        return resp.json({ data: 'Failed', msg: 'User not found' });
+      }
+
+      const passwordMatch = await bcrypt.compare(old, user.password);
+      if (!passwordMatch) {
+        return resp.json({ data: 'Failed', msg: 'Current password is incorrect' });
+      }
+
+      const hashedPass = await bcrypt.hash(ps, 10);
+      await LoginData.findOneAndUpdate({ email: em }, { password: hashedPass }, { new: true });
+
       resp.json({
         data: 'success',
         msg: 'Data Saved Successfully'

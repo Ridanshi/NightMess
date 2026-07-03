@@ -1,38 +1,867 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --nm-bg: #f8f9fb;
+  --nm-page: #ffffff;
+  --nm-surface: #ffffff;
+  --nm-surface-muted: #f5f6f8;
+  --nm-border: #e6e9ef;
+  --nm-border-strong: #d0d5dd;
+  --nm-text: #1d2735;
+  --nm-heading: #111827;
+  --nm-muted: #697386;
+  --nm-soft: #98a2b3;
+  --nm-accent: #df6f2a;
+  --nm-accent-hover: #c75f20;
+  --nm-accent-soft: #fff4ea;
+  --nm-secondary: #47657c;
+  --nm-success: #198754;
+  --nm-danger: #dc3545;
+  --nm-info: #2563eb;
+  --nm-radius: 14px;
+  --nm-radius-sm: 8px;
+  --nm-shadow: 0 18px 45px rgba(16, 24, 40, 0.085);
+  --nm-shadow-sm: 0 3px 14px rgba(16, 24, 40, 0.052);
+  --nm-focus: 0 0 0 3px rgba(223, 111, 42, 0.14);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+:root[data-theme="dark"] {
+  --nm-bg: #111317;
+  --nm-page: #16191f;
+  --nm-surface: #1b1f27;
+  --nm-surface-muted: #232834;
+  --nm-border: #303645;
+  --nm-border-strong: #424a5d;
+  --nm-text: #e7eaf0;
+  --nm-heading: #f8fafc;
+  --nm-muted: #a8b0c0;
+  --nm-soft: #7d8798;
+  --nm-accent: #ec8a43;
+  --nm-accent-hover: #f49a57;
+  --nm-accent-soft: rgba(236, 138, 67, 0.12);
+  --nm-secondary: #9db2c3;
+  --nm-success: #34a853;
+  --nm-danger: #ef4444;
+  --nm-info: #60a5fa;
+  --nm-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+  --nm-shadow-sm: 0 3px 12px rgba(0, 0, 0, 0.18);
+  --nm-focus: 0 0 0 3px rgba(251, 146, 60, 0.22);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+* {
+  box-sizing: border-box;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--nm-bg) !important;
+  color: var(--nm-text) !important;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+body::before,
+body::after {
+  display: none !important;
+}
+
+::selection {
+  background: rgba(249, 115, 22, 0.2);
+  color: var(--nm-heading);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.brand-title,
+.selection-title,
+.profile-title,
+.card-title,
+.navbar-brand {
+  color: var(--nm-heading) !important;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
+
+p,
+small,
+.lead,
+.text-muted,
+.brand-subtitle,
+.selection-subtitle,
+.signin-text,
+.form-text {
+  color: var(--nm-muted) !important;
+}
+
+a,
+.signin-link,
+.footer-bottom-link {
+  color: var(--nm-accent-hover) !important;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a:hover,
+.signin-link:hover,
+.footer-bottom-link:hover {
+  color: var(--nm-accent) !important;
+}
+
+.theme-toggle {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1080;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 8px;
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid var(--nm-border);
+  border-radius: 999px;
+  background: var(--nm-surface);
+  color: var(--nm-text);
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.075);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
-.App-link {
-  color: #61dafb;
+.theme-toggle svg {
+  width: 14px;
+  height: 14px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.theme-toggle:hover {
+  border-color: var(--nm-border-strong);
+  background: var(--nm-surface-muted);
+}
+
+.theme-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--nm-focus);
+}
+
+/* Calm page structure */
+html body .login-container,
+html body .signup-container,
+html body .selection-container,
+html body .edit-profile-container,
+html body .cart-container,
+html body .orders-container {
+  background: var(--nm-bg) !important;
+  color: var(--nm-text) !important;
+}
+
+html body .login-container,
+html body .signup-container {
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.88), transparent 19rem),
+    linear-gradient(180deg, rgba(223, 111, 42, 0.042), transparent 21rem),
+    radial-gradient(circle at 14% 9%, rgba(223, 111, 42, 0.048), transparent 17rem),
+    radial-gradient(circle at 88% 10%, rgba(71, 101, 124, 0.05), transparent 21rem),
+    linear-gradient(rgba(16, 24, 40, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 24, 40, 0.018) 1px, transparent 1px),
+    var(--nm-bg) !important;
+  background-size: auto, auto, auto, auto, 48px 48px, 48px 48px, auto !important;
+  isolation: isolate;
+}
+
+html[data-theme="dark"] body .login-container,
+html[data-theme="dark"] body .signup-container {
+  background:
+    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.035), transparent 19rem),
+    linear-gradient(180deg, rgba(236, 138, 67, 0.04), transparent 21rem),
+    radial-gradient(circle at 14% 9%, rgba(236, 138, 67, 0.045), transparent 17rem),
+    radial-gradient(circle at 88% 10%, rgba(157, 178, 195, 0.045), transparent 21rem),
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    var(--nm-bg) !important;
+  background-size: auto, auto, auto, auto, 48px 48px, 48px 48px, auto !important;
+}
+
+html body .login-container::before,
+html body .signup-container::before {
+  content: "" !important;
+  display: block !important;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, transparent 0 42%, rgba(255, 255, 255, 0.52) 42.08% 42.22%, transparent 42.32%),
+    linear-gradient(45deg, transparent 0 58%, rgba(223, 111, 42, 0.032) 58.08% 58.22%, transparent 58.32%);
+  opacity: 0.48;
+}
+
+html[data-theme="dark"] body .login-container::before,
+html[data-theme="dark"] body .signup-container::before {
+  background:
+    linear-gradient(135deg, transparent 0 42%, rgba(255, 255, 255, 0.03) 42.08% 42.22%, transparent 42.32%),
+    linear-gradient(45deg, transparent 0 58%, rgba(236, 138, 67, 0.035) 58.08% 58.22%, transparent 58.32%);
+  opacity: 0.62;
+}
+
+html body .login-container::after,
+html body .signup-container::after {
+  content: "" !important;
+  display: block !important;
+  position: fixed;
+  right: -10rem;
+  bottom: -11rem;
+  width: 27rem;
+  height: 27rem;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 32%;
+  background: rgba(223, 111, 42, 0.03);
+  filter: blur(42px);
+  transform: rotate(18deg);
+}
+
+html[data-theme="dark"] body .login-container::after,
+html[data-theme="dark"] body .signup-container::after {
+  background: rgba(236, 138, 67, 0.035);
+}
+
+html body .login-container::before,
+html body .login-container::after,
+html body .signup-container::before,
+html body .signup-container::after,
+html body .selection-container::before,
+html body .selection-container::after,
+html body .cart-container::before,
+html body .cart-container::after,
+html body .orders-container::before,
+html body .orders-container::after,
+html body .edit-profile-container::before,
+html body .edit-profile-container::after {
+  display: none !important;
+}
+
+html body .login-container::before,
+html body .login-container::after,
+html body .signup-container::before,
+html body .signup-container::after {
+  display: block !important;
+}
+
+html body .selection-bg {
+  background: var(--nm-bg) !important;
+}
+
+/* Remove decorative visual noise from older page styles. */
+html body .client-home-bg-elements,
+html body .background-element-1,
+html body .background-element-2,
+html body .background-element-3,
+html body [class*="login-bg-element"],
+html body [class*="signup-bg-element"],
+html body [class*="client-home-bg-element"],
+html body [class*="cart-bg-element"],
+html body [class*="orders-bg-element"],
+html body [class*="profile-bg-element"],
+html body [class*="footer-bg-element"],
+html body .profile-bg-dots,
+html body .profile-bg-line-1,
+html body .profile-bg-line-2,
+html body .orders-bg-dots,
+html body .orders-bg-line-1,
+html body .orders-bg-line-2 {
+  display: none !important;
+}
+
+.nightmess-title-section {
+  padding: 1.25rem 0 0.5rem;
+  margin-bottom: 1.5rem !important;
+}
+
+html body .nightmess-title-section h1,
+html body .selection-title,
+html body .brand-title,
+html body .profile-title,
+html body .login-container .text-center h2 {
+  color: var(--nm-heading) !important;
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  text-shadow: none !important;
+}
+
+html body .nightmess-title-section .lead,
+html body .selection-subtitle,
+html body .brand-subtitle,
+html body .login-container .text-center p {
+  max-width: 660px;
+  margin-inline: auto;
+  color: var(--nm-muted) !important;
+  font-size: 1rem !important;
+  line-height: 1.6;
+}
+
+/* Navigation */
+html body .navbar {
+  background: var(--nm-surface) !important;
+  border-bottom: 1px solid var(--nm-border);
+  box-shadow: 0 2px 10px rgba(16, 24, 40, 0.05) !important;
+}
+
+html[data-theme="dark"] body .navbar {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.16) !important;
+}
+
+html body .navbar-brand {
+  color: var(--nm-heading) !important;
+  font-size: 1.05rem !important;
+}
+
+html body .navbar .nav-link,
+html body .navbar .text-dark,
+html body .navbar span.text-dark {
+  color: var(--nm-text) !important;
+}
+
+html body .navbar .nav-link {
+  border: 0 !important;
+  border-radius: var(--nm-radius-sm);
+  font-weight: 600;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+html body .navbar .nav-link:hover,
+html body .navbar .nav-link:focus {
+  color: var(--nm-accent-hover) !important;
+  background: var(--nm-accent-soft);
+}
+
+html body .navbar .nav-link.text-primary,
+html body .navbar .nav-link.fw-bold {
+  color: var(--nm-accent-hover) !important;
+  background: var(--nm-accent-soft);
+  border-bottom: 0 !important;
+}
+
+html body .navbar-toggler {
+  border-color: var(--nm-border) !important;
+  border-radius: var(--nm-radius-sm) !important;
+}
+
+html body .navbar-toggler:focus {
+  box-shadow: var(--nm-focus) !important;
+}
+
+html[data-theme="dark"] body .navbar-toggler-icon {
+  filter: invert(1) grayscale(1);
+}
+
+html body .navbar [style*="linear-gradient"] {
+  background: var(--nm-accent) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
+}
+
+/* Cards and panels */
+html body .card,
+html body .signup-card,
+html body .login-container .card,
+html body .profile-form-card,
+html body .nightmess-card,
+html body .order-summary-card,
+html body .payment-modal-content,
+html body .modal-content,
+html body .table,
+html body .list-group-item,
+html body .alert {
+  background: var(--nm-surface) !important;
+  color: var(--nm-text) !important;
+  border: 1px solid var(--nm-border) !important;
+  border-radius: var(--nm-radius) !important;
+  box-shadow: var(--nm-shadow-sm) !important;
+  backdrop-filter: none !important;
+}
+
+html body .login-container .card,
+html body .signup-card {
+  max-width: 432px;
+  margin-inline: auto;
+  border-color: rgba(208, 213, 221, 0.82) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 18px 44px rgba(16, 24, 40, 0.08), 0 1px 0 rgba(255, 255, 255, 0.9) inset !important;
+}
+
+html[data-theme="dark"] body .login-container .card,
+html[data-theme="dark"] body .signup-card {
+  border-color: rgba(66, 74, 93, 0.82) !important;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24), 0 1px 0 rgba(255, 255, 255, 0.035) inset !important;
+}
+
+html body .login-container .card-body {
+  padding: 2.15rem !important;
+}
+
+html body .card,
+html body .nightmess-card,
+html body .signup-card,
+html body .login-container .card,
+html body .profile-form-card {
+  transition: box-shadow 160ms ease, transform 160ms ease, border-color 160ms ease !important;
+}
+
+html body .card:hover,
+html body .nightmess-card:hover,
+html body .signup-card:hover,
+html body .login-container .card:hover,
+html body .profile-form-card:hover {
+  transform: translateY(-1px) !important;
+  border-color: var(--nm-border-strong) !important;
+  box-shadow: var(--nm-shadow) !important;
+}
+
+html body .card::before,
+html body .signup-card::before,
+html body .login-container .card::before,
+html body .profile-form-card::before,
+html body .nightmess-card::before {
+  background: var(--nm-accent) !important;
+}
+
+html body .card-title,
+html body .fw-bold,
+html body .fw-semibold,
+html body strong {
+  color: var(--nm-heading) !important;
+}
+
+html body .shadow,
+html body .shadow-sm,
+html body .shadow-lg {
+  box-shadow: var(--nm-shadow-sm) !important;
+}
+
+html body .bg-white,
+html body .bg-light,
+html body .bg-body-tertiary {
+  background: var(--nm-surface) !important;
+}
+
+html body .border-bottom,
+html body hr {
+  border-color: var(--nm-border) !important;
+}
+
+/* Forms */
+html body .form-control,
+html body .form-select,
+html body .form-input,
+html body .profile-form-control,
+html body textarea.form-control {
+  background: var(--nm-page) !important;
+  color: var(--nm-text) !important;
+  border: 1px solid var(--nm-border-strong) !important;
+  min-height: 43px;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease !important;
+}
+
+html body .login-container .form-control,
+html body .login-container .form-input,
+html body .signup-container .form-input {
+  padding: 0.64rem 0.88rem !important;
+  font-size: 0.94rem !important;
+  line-height: 1.45 !important;
+}
+
+html body .signup-container .form-input {
+  padding-left: 2.6rem !important;
+}
+
+html body .form-control::placeholder,
+html body .form-input::placeholder,
+html body .profile-form-control::placeholder {
+  color: var(--nm-soft) !important;
+}
+
+html body .form-control:focus,
+html body .form-select:focus,
+html body .form-input:focus,
+html body .profile-form-control:focus {
+  background: var(--nm-page) !important;
+  color: var(--nm-text) !important;
+  border-color: var(--nm-accent) !important;
+  box-shadow: var(--nm-focus) !important;
+  transform: none !important;
+}
+
+html body .form-label,
+html body .profile-form-label,
+html body .input-group label {
+  color: var(--nm-text) !important;
+  font-weight: 600 !important;
+  font-size: 0.88rem !important;
+  margin-bottom: 0.42rem !important;
+}
+
+html body .input-icon,
+html body .password-toggle,
+html body .login-container .password-toggle svg {
+  color: var(--nm-soft) !important;
+}
+
+html body .password-toggle:hover,
+html body .login-container .password-toggle:hover svg {
+  color: var(--nm-accent-hover) !important;
+}
+
+/* Buttons */
+html body .btn,
+html body .submit-button,
+html body .select-btn,
+html body .profile-submit-btn,
+html body .payment-btn {
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  box-shadow: none !important;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease !important;
+}
+
+html body .btn:hover,
+html body .submit-button:hover,
+html body .select-btn:hover,
+html body .profile-submit-btn:hover,
+html body .payment-btn:hover:not(.payment-btn-disabled) {
+  transform: none !important;
+}
+
+html body .btn-primary,
+html body .submit-button,
+html body .select-btn,
+html body .profile-submit-btn,
+html body .login-container .btn-primary {
+  color: #ffffff !important;
+  border: 1px solid var(--nm-accent) !important;
+  background: var(--nm-accent) !important;
+  box-shadow: 0 6px 14px rgba(201, 95, 32, 0.16) !important;
+}
+
+html body .btn-primary:hover,
+html body .submit-button:hover,
+html body .select-btn:hover,
+html body .profile-submit-btn:hover,
+html body .login-container .btn-primary:hover {
+  background: var(--nm-accent-hover) !important;
+  border-color: var(--nm-accent-hover) !important;
+  box-shadow: 0 7px 16px rgba(201, 95, 32, 0.2) !important;
+}
+
+html body .btn-success,
+html body .payment-wallet-btn {
+  color: #ffffff !important;
+  border: 1px solid var(--nm-success) !important;
+  background: var(--nm-success) !important;
+}
+
+html body .btn-danger,
+html body .payment-razorpay-btn {
+  color: #ffffff !important;
+  border: 1px solid var(--nm-danger) !important;
+  background: var(--nm-danger) !important;
+}
+
+html body .btn-info {
+  color: #ffffff !important;
+  border: 1px solid var(--nm-info) !important;
+  background: var(--nm-info) !important;
+}
+
+html body .btn-outline-primary,
+html body .btn-outline-secondary,
+html body .btn-outline-danger {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html body .btn-outline-primary {
+  color: var(--nm-accent-hover) !important;
+  border-color: var(--nm-accent) !important;
+}
+
+html body .btn-outline-secondary {
+  color: var(--nm-muted) !important;
+  border-color: var(--nm-border-strong) !important;
+}
+
+html body .btn-outline-danger {
+  color: var(--nm-danger) !important;
+  border-color: var(--nm-danger) !important;
+}
+
+html body .btn-outline-primary:hover {
+  color: #ffffff !important;
+  background: var(--nm-accent) !important;
+}
+
+html body .btn-outline-secondary:hover {
+  color: var(--nm-text) !important;
+  background: var(--nm-surface-muted) !important;
+}
+
+html body .btn-outline-danger:hover {
+  color: #ffffff !important;
+  background: var(--nm-danger) !important;
+}
+
+html body .btn:focus-visible,
+html body .submit-button:focus-visible,
+html body .select-btn:focus-visible,
+html body .payment-btn:focus-visible {
+  box-shadow: var(--nm-focus) !important;
+}
+
+/* Food, cart, and orders */
+html body .card-img-top,
+html body .card img,
+html body .cart-item-row img,
+html body .orders-container img {
+  object-fit: cover;
+}
+
+html body .card-img-top {
+  filter: none !important;
+}
+
+html body .food-type-logo {
+  background: #ffffff !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+}
+
+html body .badge {
+  border-radius: 999px !important;
+  font-weight: 600 !important;
+}
+
+html body .cart-container > .row.shadow,
+html body .orders-container .date-section,
+html body .container > .table-responsive {
+  background: var(--nm-surface) !important;
+  border: 1px solid var(--nm-border) !important;
+  border-radius: var(--nm-radius) !important;
+  overflow: hidden;
+}
+
+html body .cart-item-row {
+  background: var(--nm-surface) !important;
+  border-radius: var(--nm-radius-sm) !important;
+  margin: 0.5rem 0 !important;
+}
+
+html body .cart-item-row:hover {
+  box-shadow: var(--nm-shadow-sm);
+}
+
+html body .order-summary-title {
+  color: var(--nm-heading) !important;
+}
+
+html body .order-summary-title::after {
+  background: var(--nm-accent) !important;
+}
+
+html body .date-section > h5:first-child {
+  color: var(--nm-heading) !important;
+  background: var(--nm-surface-muted) !important;
+  border: 1px solid var(--nm-border) !important;
+  box-shadow: none !important;
+}
+
+html body .table {
+  color: var(--nm-text) !important;
+}
+
+html body .table > :not(caption) > * > * {
+  color: var(--nm-text) !important;
+  border-color: var(--nm-border) !important;
+  background-color: transparent !important;
+}
+
+html body .table-dark {
+  --bs-table-bg: #1f2937;
+  --bs-table-color: #ffffff;
+}
+
+html[data-theme="dark"] body .table-dark {
+  --bs-table-bg: #111827;
+}
+
+/* Alerts and modals */
+html body .alert {
+  box-shadow: none !important;
+}
+
+html body .modal-header,
+html body .modal-footer,
+html body .payment-modal-header {
+  border-color: var(--nm-border) !important;
+}
+
+html body .payment-modal-body {
+  background: var(--nm-surface) !important;
+}
+
+html body .payment-info-box {
+  background: var(--nm-surface-muted) !important;
+  border: 1px solid var(--nm-border) !important;
+  border-radius: var(--nm-radius-sm) !important;
+}
+
+html body .payment-info-label,
+html body .payment-divider-text {
+  color: var(--nm-muted) !important;
+}
+
+html body .payment-info-value,
+html body .payment-wallet-balance,
+html body .payment-modal-title {
+  color: var(--nm-heading) !important;
+}
+
+html body .payment-divider-line {
+  background: var(--nm-border) !important;
+}
+
+html[data-theme="dark"] body .btn-close {
+  filter: invert(1) grayscale(1);
+}
+
+/* Footer and identity marks */
+html body .nightmess-footer {
+  background: var(--nm-surface) !important;
+  border-top: 1px solid var(--nm-border) !important;
+  box-shadow: 0 -2px 10px rgba(16, 24, 40, 0.04) !important;
+}
+
+html body .footer-logo-circle,
+html body .logo-circle {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  background: var(--nm-accent) !important;
+  box-shadow: 0 8px 18px rgba(201, 95, 26, 0.18) !important;
+}
+
+html body .footer-logo-circle {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+html body .brand-section,
+html body .login-container .text-center.mb-4 {
+  margin-bottom: 1.3rem !important;
+}
+
+html body .brand-title,
+html body .login-container .brand-title {
+  font-size: clamp(1.52rem, 3vw, 1.82rem) !important;
+  font-weight: 700 !important;
+  margin-top: 0.35rem !important;
+  margin-bottom: 0.32rem !important;
+}
+
+html body .brand-subtitle,
+html body .login-container .brand-subtitle {
+  font-size: 0.93rem !important;
+  line-height: 1.55 !important;
+}
+
+html body .logo-text,
+html body .footer-logo-text {
+  color: #ffffff !important;
+}
+
+html body .footer-brand-title {
+  color: var(--nm-heading) !important;
+}
+
+html body .footer-bottom {
+  border-top-color: var(--nm-border) !important;
+}
+
+/* Loading */
+html body .loader-text,
+html body .loading-text {
+  color: var(--nm-muted) !important;
+}
+
+html body .loading-spinner {
+  border-color: rgba(249, 115, 22, 0.2) !important;
+  border-top-color: var(--nm-accent) !important;
+}
+
+@media (max-width: 991px) {
+  html body .navbar-collapse {
+    padding: 0.75rem 0 0.25rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  html body .navbar .nav-link {
+    margin: 0.15rem 0;
+    padding: 0.65rem 0.75rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  html body .login-container,
+  html body .signup-container,
+  html body .selection-container,
+  html body .edit-profile-container {
+    padding: 1.5rem 0.75rem !important;
+  }
+
+  html body .selection-title {
+    font-size: 2rem !important;
+  }
+
+  html body .cart-item-row .col-md-5 {
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .theme-toggle {
+    right: 12px;
+    bottom: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
   }
 }
