@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from 'axiosConfig';
 import AdmMenu from "./AdmMenu";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 
@@ -24,7 +24,7 @@ function Editprof() {
     const displayAdmin = async () => {
         try {
             // ✅ FIX: Added error handling and credentials
-            let admindata = await axios.get("http://localhost:5000/get_admin", {
+            let admindata = await API.get("/get_admin", {
                 withCredentials: true  // ✅ Include credentials
             });
 
@@ -47,8 +47,8 @@ function Editprof() {
         
         try {
             // ✅ FIX: Use axios instead of fetch, with credentials
-            const result = await axios.post(
-                "http://localhost:5000/update_admin_profile",
+            const result = await API.post(
+                "/update_admin_profile",
                 { name, address, contact },
                 { withCredentials: true }  // ✅ Include credentials
             );

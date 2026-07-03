@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Eye, EyeOff } from "lucide-react";
 import './Login.css';
-import axios from 'axios';
+import API from 'axiosConfig';
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -16,10 +16,7 @@ function Login() {
 const handleOnSubmit = async (e) => {
   e.preventDefault();
   try {
-    const response = await axios.post('/check_login',
-      { email, password },
-      { withCredentials: true, timeout: 10000 }
-    );
+    const response = await API.post('/check_login', { email, password });
     
     console.log("Login response:", response.data);
     

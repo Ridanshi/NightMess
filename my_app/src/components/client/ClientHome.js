@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import ClientMenu from "./ClientMenu";
 import {
   Container,
@@ -49,7 +49,7 @@ function ClientHome() {
     e.preventDefault();
     setResult("");
     try {
-      const res = await fetch("http://localhost:5000/get_foodname", {
+      const res = await fetch("/get_foodname", {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ foodname }),
@@ -72,7 +72,7 @@ useEffect(() => {
       
       console.log('🔍 Fetching quick recommendations...');
       
-      const response = await fetch('http://localhost:5000/api/quick-recommendations', {
+      const response = await fetch('/api/quick-recommendations', {
         method: 'GET',
         credentials: 'include',  // ✅ CRITICAL - Include session cookie
         headers: {
@@ -115,7 +115,7 @@ useEffect(() => {
 useEffect(() => {
   const fetchOrderHistory = async () => {
     try {
-      const response = await fetch('http://localhost:5000/show_orders', {
+      const response = await fetch('/show_orders', {
         method: 'GET',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' }
@@ -196,7 +196,7 @@ useEffect(() => {
         setSnackOpen(true);
         return;
       }
-      const response = await fetch("http://localhost:5000/addtocart", {
+      const response = await fetch("/addtocart", {
         method: "POST",
         credentials: 'include',  // ✅ THIS IS CRITICAL
         headers: { "Content-Type": "application/json" },
@@ -452,7 +452,7 @@ onClick={() => window.location.href = '/client/mood-food'}  // ✅ CORRECT
                     <div style={{ position: "relative", height: "90px", overflow: "hidden" }}>
                       <Card.Img
                         variant="top"
-                        src={`http://localhost:5000/public/images/${item.image}`}
+                        src={`/public/images/${item.image}`}
                         alt={item.foodname}
                         style={{
                           height: "100%",
@@ -589,7 +589,7 @@ onClick={() => window.location.href = '/client/mood-food'}  // ✅ CORRECT
                     <div style={{ position: "relative", height: "220px", overflow: "hidden" }}>
                       <Card.Img
                         variant="top"
-                        src={`http://localhost:5000/public/images/${item.image}`}
+                        src={`/public/images/${item.image}`}
                         alt={item.foodname}
                         style={{
                           height: "100%",

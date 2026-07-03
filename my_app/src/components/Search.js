@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 function Search() {
@@ -17,7 +17,7 @@ function Search() {
 
     const displaySearch = async (searchName) => {
         try {
-            let response = await fetch('http://localhost:5000/get_med', {
+            let response = await fetch('/get_med', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

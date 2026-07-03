@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
 import AdmMenu from "../admin/AdmMenu";
 
@@ -15,7 +15,7 @@ function VendorReg() {
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     console.log("Data Sent Successfully!");
-    let r = await fetch("http://localhost:5000/register_vendors", {
+    let r = await fetch("/register_vendors", {
       method: "POST",
       body: JSON.stringify({ messname, owner, address, contact, email, password, cpassword }),
       headers: {

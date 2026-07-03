@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdmMenu from "../admin/AdmMenu";
 import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
@@ -20,7 +20,7 @@ function DeleteVendors() {
 
     const displayVendor = async () => {
         // ✅ ONLY LOGIC FIX: Use correct endpoint and method
-        let res = await fetch(`http://localhost:5000/get_vendor_by_email/${id}`, {
+        let res = await fetch(`/get_vendor_by_email/${id}`, {
             method: "GET",
             credentials: "include",
         });
@@ -35,7 +35,7 @@ function DeleteVendors() {
     const handleOnSubmit = async (e) => {
         e.preventDefault();
         // ✅ ONLY LOGIC FIX: Use email as id and add credentials
-        let res = await fetch("http://localhost:5000/delete_vendors", {
+        let res = await fetch("/delete_vendors", {
             method: "post",
             credentials: "include",
             body: JSON.stringify({ messname, owner, address, contact, id: email }),

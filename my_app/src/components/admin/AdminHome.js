@@ -1,5 +1,5 @@
-import AdmMenu from "./AdmMenu";
-import axios from 'axios';
+﻿import AdmMenu from "./AdmMenu";
+import API from 'axiosConfig';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -28,9 +28,9 @@ function AdminHome() {
 
   const checkUser = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/isUser");
+      const res = await API.get("/isUser");
       if (res.data.usertype === "admin") {
-        const data = await axios.get("http://localhost:5000/get_admin");
+        const data = await API.get("/get_admin");
         setName(data.data.name);
         setAddress(data.data.address);
         setContact(data.data.contact);

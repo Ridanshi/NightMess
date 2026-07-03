@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+﻿import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const FoodContext = createContext();
 
@@ -18,7 +18,7 @@ export const FoodProvider = ({ children }) => {
   const refreshFoodItems = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/get_foods', {
+      const response = await fetch('/get_foods', {
         method: 'GET',
         credentials: 'include',  // ✅ Include credentials for session
         headers: {

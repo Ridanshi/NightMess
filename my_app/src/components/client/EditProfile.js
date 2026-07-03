@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from 'axiosConfig';
 import MedMenu from "./ClientMenu";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import './EditProfile.css';
@@ -25,7 +25,7 @@ function EditProfile() {
     const displayClient = async () => {
         try {
             // ✅ FIX: Use axios with credentials
-            let clientdata = await axios.get("http://localhost:5000/get_client", {
+            let clientdata = await API.get("/get_client", {
                 withCredentials: true  // ✅ Include credentials
             });
             console.log("clientdata: ", clientdata.data);
@@ -47,8 +47,8 @@ function EditProfile() {
         
         try {
             // ✅ FIX: Use axios instead of fetch, with credentials
-            const result = await axios.post(
-                "http://localhost:5000/update_client_profile",
+            const result = await API.post(
+                "/update_client_profile",
                 { name, contact },
                 { withCredentials: true }  // ✅ Include credentials
             );

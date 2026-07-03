@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+﻿import { useState, useEffect } from "react";
+import API from 'axiosConfig';
 import { Link } from "react-router-dom";
 import { Container, Table, Button, Row, Col } from "react-bootstrap";
 import AdmMenu from "../admin/AdmMenu";
@@ -13,7 +13,7 @@ function ShowVendors() {
 
   const displayVendor = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/show_vendors");
+      const res = await API.get("/show_vendors");
       setMed(res.data);
       console.log(res.data);
     } catch (err) {

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from 'axiosConfig';
 import { Container, Form, Button, Card, Alert, Table, Badge, Tabs, Tab, Modal } from "react-bootstrap";
 import VendorMenu from "../vendor/VendorMenu";
 
@@ -50,7 +50,7 @@ function RechargeClient() {
 
   const getClientDetails = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/client_by_email/${decodedEmail}`);
+      const res = await API.get(`/client_by_email/${decodedEmail}`);
       const clientData = res.data;
       setClient(clientData);
     } catch (err) {
@@ -61,7 +61,7 @@ function RechargeClient() {
 
   const fetchRechargeRequests = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/get_recharge_requests");
+      const res = await API.get("/get_recharge_requests");
       setRechargeRequests(res.data);
     } catch (err) {
       console.error(err);
@@ -70,7 +70,7 @@ function RechargeClient() {
 
   const fetchClientsWithRequests = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/show_clients_amt");
+      const res = await API.get("/show_clients_amt");
       setClientsWithRequests(res.data);
       console.log("✅ Fetched clients:", res.data.length); // ✅ Debug log
     } catch (err) {
@@ -116,7 +116,7 @@ function RechargeClient() {
         email_user: selectedClient.client_email,
       };
 
-      const res = await axios.post("http://localhost:5000/recharge_client", payload);
+      const res = await API.post("/recharge_client", payload);
 
       if (res.data && res.data.status === "success") {
         setMsg("Recharge successful!");
@@ -165,7 +165,7 @@ function RechargeClient() {
 
   const executeApprove = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/approve_recharge_request", {
+      const res = await API.post("/approve_recharge_request", {
         requestId: confirmData.requestId
       });
 
@@ -196,7 +196,7 @@ function RechargeClient() {
 
   const executeReject = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/reject_recharge_request", {
+      const res = await API.post("/reject_recharge_request", {
         requestId: confirmData.requestId
       });
 

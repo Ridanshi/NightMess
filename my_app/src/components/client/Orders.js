@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
+﻿import React, { useEffect, useState, useRef } from "react";
+import API from 'axiosConfig';
 import { Container, Row, Col, Card, Image, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ClientMenu from "./ClientMenu";
@@ -23,11 +23,11 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-      const userOrdersRes = await axios.get("http://localhost:5000/show_orders", {
+      const userOrdersRes = await API.get("/show_orders", {
         withCredentials: true
       });
 
-      const allOrdersRes = await axios.get("http://localhost:5000/show_all_orders_for_numbering", {
+      const allOrdersRes = await API.get("/show_all_orders_for_numbering", {
         withCredentials: true
       });
 
@@ -179,7 +179,7 @@ const Orders = () => {
                                 </Col>
                                 <Col xs={12} className="text-center mb-2">
                                   <Image
-                                    src={`http://localhost:5000/public/images/${order.image}`}
+                                    src={`/public/images/${order.image}`}
                                     height="70"
                                     width="70"
                                     rounded

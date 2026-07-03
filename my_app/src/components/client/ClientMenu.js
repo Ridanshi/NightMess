@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import { ShoppingCart, LogOut, Wallet, Store, Package, RefreshCw, Home } from 'lucide-react';
-import axios from 'axios';
+import API from 'axiosConfig';
 
 function ClientMenu() {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ function ClientMenu() {
 
   const fetchClientProfile = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/get_client", {
+      const res = await API.get("/get_client", {
         withCredentials: true
       });
       if (res.data && res.data.clientname) {
@@ -53,7 +53,7 @@ function ClientMenu() {
 
   const displayBalance = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/client_balance", {
+      const res = await API.get("/client_balance", {
         withCredentials: true
       });
       if (res.data.data !== "Failed") {
@@ -67,7 +67,7 @@ function ClientMenu() {
 
   const displayCartCount = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/cart_count", {
+      const res = await API.get("/cart_count", {
         withCredentials: true
       });
       if (res.data.data !== "Failed") {
@@ -93,8 +93,8 @@ function ClientMenu() {
     }
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/request_recharge",
+      const res = await API.post(
+        "/request_recharge",
         { amount },
         { withCredentials: true }
       );

@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
+﻿import React, {useState, useEffect} from "react";
 import {useParams, useNavigate} from "react-router-dom";
-import axios from "axios";
+import API from 'axiosConfig';
 
 function EditAdmin()
 {
@@ -22,7 +22,7 @@ function EditAdmin()
     );
     const displayAdmin = async() =>{
         let result = await fetch(
-            'http://localhost:5000/get_admin',{
+            '/get_admin',{
                 method: "post",
                 body: JSON.stringify({id}),
                 headers: {
@@ -40,7 +40,7 @@ function EditAdmin()
     const handleOnSubmit = async(e)=>{
         e.preventDefault();
         let result = await fetch(
-            'http://localhost:5000/update_admin_profile',{
+            '/update_admin_profile',{
                 method: "post",
                 body: JSON.stringify({name, address, contact, email}),
                 headers: {'Content-Type': 'application/json'}

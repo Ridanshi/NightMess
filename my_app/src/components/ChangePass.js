@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 //import { useNavigate } from "react-router-dom";
 function ChangePass()
 {
@@ -11,7 +11,7 @@ function ChangePass()
     const handleOnSubmit=async(e)=>{
         e.preventDefault();
         let result = await fetch(
-            'http://localhost:5000/change_pass', {
+            '/change_pass', {
                 method: "post",
                 body: JSON.stringify({curr, pass }),
                 headers: {

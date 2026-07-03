@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+﻿import React, { useState, useEffect } from 'react';
+import API from 'axiosConfig';
 
 function FoodProducts() {
   const [products, setProducts] = useState([]);
@@ -8,7 +8,7 @@ function FoodProducts() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const res = await axios.get(
+        const res = await API.get(
           'https://world.openfoodfacts.org/cgi/search.pl?search_terms=snacks&search_simple=1&action=process&json=1'
         );
         setProducts(res.data.products.slice(0, 12)); // first 12 results

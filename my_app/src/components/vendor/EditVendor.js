@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from 'axiosConfig';
 import AdminMenu from "../admin/AdmMenu";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 
@@ -30,8 +30,8 @@ function EditVendor() {
     const displayVendor = async () => {
         try {
             console.log(`Fetching vendor: ${email}`);
-            const response = await axios.get(
-                `http://localhost:5000/get_vendor_by_email/${email}`,
+            const response = await API.get(
+                `/get_vendor_by_email/${email}`,
                 { withCredentials: true }
             );
             
@@ -59,7 +59,7 @@ function EditVendor() {
         setResult("");
 
         try {
-            const response = await fetch('http://localhost:5000/update_vendors', {
+            const response = await fetch('/update_vendors', {
                 method: "POST",
                 body: JSON.stringify({ 
                     messname, 

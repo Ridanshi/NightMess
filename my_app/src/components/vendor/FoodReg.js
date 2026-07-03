@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Container, Row, Col, Card, Form, Button, Alert, Image, Spinner } from "react-bootstrap";
 import VendorMenu from "./VendorMenu";
 
@@ -56,7 +56,7 @@ function FoodReg() {
     formData.append('quantity', quantity);
 
     try {
-      const response = await fetch("http://localhost:5000/register_food", {
+      const response = await fetch("/register_food", {
         method: "post",
         body: formData,
         credentials: 'include'  // ✅ ADD ONLY THIS LINE

@@ -1,4 +1,4 @@
-import axios from "axios";
+﻿import API from 'axiosConfig';
 import { useState, useEffect } from "react";
 import VendorMenu from "../vendor/VendorMenu";
 import { Button, Container, Table, Alert, Spinner } from "react-bootstrap";
@@ -22,7 +22,7 @@ function ShowClients() {
   const displayClients = async () => {
     try {
       // ✅ FIX: Use the correct endpoint that filters by vendor
-      const res = await axios.get("http://localhost:5000/show_clients_amt");
+      const res = await API.get("/show_clients_amt");
       setClients(res.data);
       setLoading(false);
     } catch (err) {

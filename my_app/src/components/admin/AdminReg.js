@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Container, Row, Col, Form, Button, Card, Alert } from "react-bootstrap";
 import AdmMenu from "./AdmMenu";
 
@@ -13,7 +13,7 @@ function AdminReg() {
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    let r = await fetch('http://localhost:5000/register_admin', {
+    let r = await fetch('/register_admin', {
       method: "POST",
       body: JSON.stringify({ name, address, contact, email, password, confirm }),
       headers: { 'Content-Type': 'application/json' }

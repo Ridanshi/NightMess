@@ -1,7 +1,7 @@
-// src/components/VendorDetail.js
+﻿// src/components/VendorDetail.js
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import API from 'axiosConfig';
 
 function VendorDetail() {
   const { id } = useParams(); // get vendor id from url params
@@ -13,13 +13,13 @@ function VendorDetail() {
     async function fetchVendorAndFoods() {
       try {
         // Fetch vendor list and find selected vendor by id
-        const vendorResponse = await axios.get("http://localhost:5000/show_vendors");
+        const vendorResponse = await API.get("/show_vendors");
         const foundVendor = vendorResponse.data.find(v => v._id === id);
         setVendor(foundVendor);
 
         if (foundVendor) {
           // Fetch foods for that vendor by email
-          const foodsResponse = await axios.post("http://localhost:5000/get_foods_by_vendor", {
+          const foodsResponse = await API.post("/get_foods_by_vendor", {
             vendor_email: foundVendor.vendor_email,
           });
           setFoods(foodsResponse.data.data || []);

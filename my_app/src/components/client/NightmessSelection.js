@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+﻿import React, { useEffect, useState } from "react";
+import API from 'axiosConfig';
 import { Container, Row, Col, Card, Button, Alert, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "./NightmessSelection.css";
@@ -17,7 +17,7 @@ const NightmessSelection = () => {
   useEffect(() => {
     const checkUserType = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/isUser");
+        const res = await API.get("/isUser");
         if (res.data.usertype === 'vendor') {
           navigate("/vendor/vendorhome");
         } else if (res.data.usertype === 'admin') {
@@ -69,7 +69,7 @@ const NightmessSelection = () => {
 
   const fetchNightmesses = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/get_all_nightmesses");
+      const res = await API.get("/get_all_nightmesses");
 
       // Process each nightmess to add detected hostel type
       const processedData = res.data.map(nm => ({
@@ -87,7 +87,7 @@ const NightmessSelection = () => {
 
   const fetchCurrentNightmess = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/get_selected_nightmess");
+      const res = await API.get("/get_selected_nightmess");
       if (res.data && res.data.nightmessId) {
         setCurrentNightmessId(res.data.nightmessId);
       }
@@ -121,7 +121,7 @@ const NightmessSelection = () => {
 
   const selectNightmess = async (nightmessId, vendorEmail) => {
     try {
-      await axios.post("http://localhost:5000/set_selected_nightmess", {
+      await API.post("/set_selected_nightmess", {
         nightmessId,
         vendorEmail,
       });
@@ -135,7 +135,7 @@ const NightmessSelection = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/logout");
+      await API.post("/logout");
       localStorage.clear();
       sessionStorage.clear();
       navigate("/login");

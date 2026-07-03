@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from 'axiosConfig';
 import MedMenu from "./VendorMenu";
 import {Container,Row,Col,Form,Button,Alert} from "react-bootstrap";
 
@@ -22,7 +22,7 @@ function Editprofvendor() {
 
     const displayVendor = async () => {
         try {
-            let vendata = await axios.get("http://localhost:5000/get_vendor");
+            let vendata = await API.get("/get_vendor");
             console.log("vendordata: ", vendata.data);
             const vendor = vendata.data;
             
@@ -47,7 +47,7 @@ function Editprofvendor() {
 
         try {
             // ✅ FIXED: Send with correct field names
-            let result = await fetch('http://localhost:5000/update_vendor_profile', {
+            let result = await fetch('/update_vendor_profile', {
                 method: "post",
                 body: JSON.stringify({ 
                     messname, 

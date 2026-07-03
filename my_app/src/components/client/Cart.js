@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import API from 'axiosConfig';
 import {
   Container,
   Row,
@@ -38,9 +38,9 @@ const Cart = () => {
 
   const checkUserAndMess = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/isUser");
+      const res = await API.get("/isUser");
       if (res.data.usertype === "client" || res.data.usertype === "no user") {
-        const messRes = await axios.get("http://localhost:5000/get_selected_nightmess");
+        const messRes = await API.get("/get_selected_nightmess");
         if (messRes.data && messRes.data.vendorEmail) {
           setSelectedVendorEmail(messRes.data.vendorEmail);
         } else {
@@ -61,7 +61,7 @@ const Cart = () => {
 
   const displayBalance = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/client_balance");
+      const res = await API.get("/client_balance");
       if (res.data.data !== "Failed") {
         setBalance(res.data.balance);
       }
@@ -72,7 +72,7 @@ const Cart = () => {
 
   const displayCart = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/show_cartdata");
+      const res = await API.get("/show_cartdata");
       if (res.data.data === "Failed") {
         setIsLoggedIn(false);
         setCart([]);
@@ -83,7 +83,7 @@ const Cart = () => {
         
         const foodPromises = allCartItems.map(async (item) => {
           try {
-            const foodRes = await axios.post("http://localhost:5000/get_foodname", {
+            const foodRes = await API.post("/get_foodname", {
               foodId: item.foodId
             });
             
@@ -116,7 +116,7 @@ const Cart = () => {
   const updateQuantity = async (id, newQuantity) => {
     if (newQuantity < 1) return;
     try {
-      await axios.put("http://localhost:5000/update_cart_quantity", {
+      await API.put("/update_cart_quantity", {
         id,
         quantity: newQuantity,
       });
@@ -132,7 +132,7 @@ const Cart = () => {
 
   const removeFromCart = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/remove_from_cart/${id}`);
+      await API.delete(`/remove_from_cart/${id}`);
       setCart((prevCart) => prevCart.filter((item) => item._id !== id));
     } catch (err) {
       console.log(err);
@@ -144,7 +144,7 @@ const Cart = () => {
       const itemsToDelete = cart.map(item => item._id);
       
       for (const itemId of itemsToDelete) {
-        await axios.delete(`http://localhost:5000/remove_from_cart/${itemId}`);
+        await API.delete(`/remove_from_cart/${itemId}`);
       }
       
       setCart([]);
@@ -169,7 +169,7 @@ const Cart = () => {
     }
 
     try {
-      await axios.post("http://localhost:5000/confirm_order", { cart });
+      await API.post("/confirm_order", { cart });
       setShowPaymentModal(false);
       setShowModal(true);
       clearCart();
@@ -241,7 +241,7 @@ const Cart = () => {
                   >
                     <Col md={5} className="d-flex">
                       <Image
-                        src={`http://localhost:5000/public/images/${item.image}`}
+                        src={`/public/images/${item.image}`}
                         height="80"
                         width="80"
                         rounded

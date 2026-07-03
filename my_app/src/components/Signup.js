@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { User, Phone, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./DarkTheme.css";
@@ -49,7 +49,7 @@ function Signup() {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/register_client", {
+    const res = await fetch("/register_client", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",  // ✅ ONLY FIX: Added this line
@@ -66,7 +66,7 @@ function Signup() {
       
       // ✅ NEW: Log the user in after successful registration
       try {
-        const loginRes = await fetch("http://localhost:5000/check_login", {
+        const loginRes = await fetch("/check_login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",  // ✅ CRITICAL: Include credentials

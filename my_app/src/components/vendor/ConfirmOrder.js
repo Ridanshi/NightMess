@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+﻿import React, { useEffect, useState } from "react";
+import API from 'axiosConfig';
 import {
   Container,
   Row,
@@ -63,7 +63,7 @@ function ConfirmOrder() {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/show_orders_vendor");
+      const res = await API.get("/show_orders_vendor");
       if (res.data.data === "Failed") {
         setError("Please log in to view orders.");
         setOrders([]);
@@ -96,7 +96,7 @@ const confirmOrder = async (orderId) => {
     setShowTimeModal(true);
     
     // ✅ STEP 3: Update server in BACKGROUND
-    await axios.put("http://localhost:5000/confirm_order_status", { id: orderId });
+    await API.put("/confirm_order_status", { id: orderId });
     
     // ✅ STEP 4: Silently refetch in background to get authoritative data
     fetchOrders(); // No await - runs in background!
@@ -129,7 +129,7 @@ const handleSetTime = async () => {
     );
     
     // ✅ STEP 3: Save to server in BACKGROUND
-    await axios.post("http://localhost:5000/set_order_time", {
+    await API.post("/set_order_time", {
       orderId: currentOrderId,
       time: estimatedTimeInput,
     });
@@ -158,7 +158,7 @@ const rejectOrder = async (orderId) => {
     );
     
     // ✅ Background server update
-    await axios.put("http://localhost:5000/reject_order_status", { id: orderId });
+    await API.put("/reject_order_status", { id: orderId });
     
     // ✅ Background refetch
     fetchOrders(); // No await!
@@ -182,7 +182,7 @@ const markReady = async (orderId) => {
     );
     
     // ✅ Background server update
-    await axios.post("http://localhost:5000/mark_ready", { orderId });
+    await API.post("/mark_ready", { orderId });
     
     // ✅ Background refetch
     fetchOrders(); // No await!
@@ -214,7 +214,7 @@ const confirmRemoveOrder = async () => {
     );
     
     // ✅ Background delete
-    await axios.delete(`http://localhost:5000/remove_order/${removedOrderId}`);
+    await API.delete(`/remove_order/${removedOrderId}`);
     
     // ✅ Background refetch
     fetchOrders(); // No await!
@@ -315,7 +315,7 @@ const confirmRemoveOrder = async () => {
 
                               <div className="d-flex align-items-center">
                                 <Image
-                                  src={`http://localhost:5000/public/images/${order.image}`}
+                                  src={`/public/images/${order.image}`}
                                   height="70"
                                   width="70"
                                   rounded

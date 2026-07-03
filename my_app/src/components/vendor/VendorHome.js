@@ -1,5 +1,5 @@
-import VendorMenu from "./VendorMenu";
-import axios from 'axios';
+﻿import VendorMenu from "./VendorMenu";
+import API from 'axiosConfig';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -29,7 +29,7 @@ function VendorHome() {
 
   const checkUser = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/isUser", { 
+      const res = await API.get("/isUser", { 
         withCredentials: true 
       });
       
@@ -37,7 +37,7 @@ function VendorHome() {
         // ✅ FIX 1: Changed from POST to GET
         // ✅ FIX 2: Changed from /get_vendors to /get_vendor (singular)
         // ✅ FIX 3: Added withCredentials
-        const data = await axios.get("http://localhost:5000/get_vendor", {
+        const data = await API.get("/get_vendor", {
           withCredentials: true
         });
         

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+﻿import React, { useState, useEffect, useRef } from 'react';
+import API from 'axiosConfig';
 import VendorMenu from "./VendorMenu";
 import {
   Container, Row, Col, Card, Button, Badge, Spinner, Alert, Form, InputGroup
@@ -48,7 +48,7 @@ const AvailableFood = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get('http://localhost:5000/get_foods', { timeout: 5000 });
+      const response = await API.get('/get_foods', { timeout: 5000 });
       setFoods(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       setError('Failed to load food items. Please check your connection and try again.');
@@ -61,7 +61,7 @@ const AvailableFood = () => {
   const updateFoodStatus = async (foodItem, newStatus) => {
     setStatusUpdating(prev => ({ ...prev, [foodItem._id]: true }));
     try {
-      const response = await axios.post('http://localhost:5000/update_food_status', {
+      const response = await API.post('/update_food_status', {
         foodId: foodItem._id,
         status: newStatus,
       });
@@ -101,7 +101,7 @@ const AvailableFood = () => {
     }
     setQuantityUpdating(prev => ({ ...prev, [foodItem._id]: true }));
     try {
-      const response = await axios.post('http://localhost:5000/update_food_quantity', {
+      const response = await API.post('/update_food_quantity', {
         foodId: foodItem._id,
         quantity: newQuantity,
       });
@@ -232,7 +232,7 @@ const AvailableFood = () => {
                   {food.image && (
                     <Card.Img
                       variant="top"
-                      src={`http://localhost:5000/public/images/${food.image}`}
+                      src={`/public/images/${food.image}`}
                       alt={food.foodname}
                       style={{ height: '200px', objectFit: 'cover' }}
                     />
