@@ -145,7 +145,7 @@ const NightmessSelection = () => {
     }
   };
 
-  const defaultNightmessImage = "/images/nm-project.jpg";
+  const defaultNightmessImage = "/nm-project.jpg";
 
   const isCurrentMess = (nightmessId) => {
     return currentNightmessId === nightmessId;
