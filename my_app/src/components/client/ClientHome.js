@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import ClientMenu from "./ClientMenu";
 import {
   Container,
@@ -452,7 +452,7 @@ onClick={() => window.location.href = '/client/mood-food'}  // ✅ CORRECT
                     <div style={{ position: "relative", height: "90px", overflow: "hidden" }}>
                       <Card.Img
                         variant="top"
-                        src={`/public/images/${item.image}`}
+                        src={`${process.env.REACT_APP_API_URL||""}/public/images/${item.image}`}
                         alt={item.foodname}
                         style={{
                           height: "100%",
@@ -589,7 +589,7 @@ onClick={() => window.location.href = '/client/mood-food'}  // ✅ CORRECT
                     <div style={{ position: "relative", height: "220px", overflow: "hidden" }}>
                       <Card.Img
                         variant="top"
-                        src={`/public/images/${item.image}`}
+                        src={`${process.env.REACT_APP_API_URL||""}/public/images/${item.image}`}
                         alt={item.foodname}
                         style={{
                           height: "100%",

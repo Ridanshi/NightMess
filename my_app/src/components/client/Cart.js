@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import API from 'axiosConfig';
 import {
@@ -241,7 +241,7 @@ const Cart = () => {
                   >
                     <Col md={5} className="d-flex">
                       <Image
-                        src={`/public/images/${item.image}`}
+                        src={`${process.env.REACT_APP_API_URL||""}/public/images/${item.image}`}
                         height="80"
                         width="80"
                         rounded

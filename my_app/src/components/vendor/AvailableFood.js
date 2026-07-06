@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import API from 'axiosConfig';
 import VendorMenu from "./VendorMenu";
 import {
@@ -232,7 +232,7 @@ const AvailableFood = () => {
                   {food.image && (
                     <Card.Img
                       variant="top"
-                      src={`/public/images/${food.image}`}
+                      src={`${process.env.REACT_APP_API_URL||""}/public/images/${food.image}`}
                       alt={food.foodname}
                       style={{ height: '200px', objectFit: 'cover' }}
                     />

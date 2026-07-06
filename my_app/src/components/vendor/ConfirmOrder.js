@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import API from 'axiosConfig';
 import {
   Container,
@@ -315,7 +315,7 @@ const confirmRemoveOrder = async () => {
 
                               <div className="d-flex align-items-center">
                                 <Image
-                                  src={`/public/images/${order.image}`}
+                                  src={`${process.env.REACT_APP_API_URL||""}/public/images/${order.image}`}
                                   height="70"
                                   width="70"
                                   rounded

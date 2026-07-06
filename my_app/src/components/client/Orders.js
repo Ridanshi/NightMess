@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+﻿import React, { useEffect, useState, useRef } from "react";
 import API from 'axiosConfig';
 import { Container, Row, Col, Card, Image, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -179,7 +179,7 @@ const Orders = () => {
                                 </Col>
                                 <Col xs={12} className="text-center mb-2">
                                   <Image
-                                    src={`/public/images/${order.image}`}
+                                    src={`${process.env.REACT_APP_API_URL||""}/public/images/${order.image}`}
                                     height="70"
                                     width="70"
                                     rounded
