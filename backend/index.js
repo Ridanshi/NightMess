@@ -598,7 +598,7 @@ app.post("/get_wallet", async (req, res) => {
 });
 
 // Fix 1: Serve static files from the correct directory
-app.use('/public/images', express.static('public/Images')); // Note the capital 'I' in Images
+app.use('/public/images', express.static('public/images'));
 
 const multer = require('multer');
 const path = require("path");
