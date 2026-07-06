@@ -41,9 +41,7 @@ Thumbs.db
 *.sln
 *.sw?
 
-# Uploaded files (do not commit user-uploaded images)
-backend/public/Images/*
-!backend/public/Images/.gitkeep
+# Uploaded files kept in repo for Render deployment (ephemeral disk)
 
 # Python
 __pycache__/
