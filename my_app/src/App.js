@@ -1,7 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import { Moon, Sun } from 'lucide-react';
 
 import AdminHome from './components/admin/AdminHome';
 import Login from './components/Login';
@@ -35,30 +33,6 @@ import Footer from './components/Footer';
 import NightmessSelection from './components/client/NightmessSelection';
 import './App.css';
 
-function ThemeToggle() {
-  const [theme, setTheme] = useState(() => localStorage.getItem('nightmess-theme') || 'light');
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('nightmess-theme', theme);
-  }, [theme]);
-
-  const isDark = theme === 'dark';
-
-  return (
-    <button
-      type="button"
-      className="theme-toggle"
-      onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-      title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-    >
-      {isDark ? <Sun size={16} /> : <Moon size={16} />}
-      <span>{isDark ? 'Light' : 'Dark'}</span>
-    </button>
-  );
-}
-
 // Layout component for client routes including Footer and Outlet for nested routes
 function ClientLayout() {
   return (
@@ -74,7 +48,6 @@ function App() {
     <FoodProvider>
       <CartProvider>
         <Router>
-          <ThemeToggle />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Signup />} />

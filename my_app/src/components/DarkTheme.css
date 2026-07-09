@@ -113,7 +113,7 @@
   overflow: hidden;
   background: #fefdfc; /* Changed here to lighter color */
   padding: 3rem 0;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   transition: all 0.7s ease;
 }
 
@@ -322,7 +322,7 @@
   color: #ffffff;
   font-size: 20px;
   font-weight: bold;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 .brand-title {
@@ -330,7 +330,7 @@
   font-weight: 700;
   margin: 0 0 6px 0;
   color: #ea580c !important;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   letter-spacing: -0.3px;
 }
 
@@ -339,7 +339,7 @@
   margin: 0;
   color: #4b5563;
   font-weight: 500;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   margin-bottom: 1.5rem;
 }
 
@@ -406,7 +406,7 @@
   font-weight: 600;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   position: relative;
   display: inline-block;
   letter-spacing: 0.2px;
@@ -446,7 +446,7 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   font-weight: 400;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   outline: none;
 }
 
@@ -459,7 +459,7 @@
   color: #94a3b8;
   font-style: normal;
   font-weight: 300;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Input Focus States */
@@ -535,7 +535,7 @@
   background: #f97316;
   box-shadow: 0 4px 15px rgba(249, 115, 22, 0.25);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   position: relative;
   overflow: hidden;
   letter-spacing: 0.3px;
@@ -583,7 +583,7 @@
   font-weight: 600;
   animation: fadeInUp 0.5s ease-out;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 .message.error {
@@ -607,7 +607,7 @@
 .signin-text {
   margin: 0;
   color: #6b7280;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 .signin-link {
@@ -617,7 +617,7 @@
   font-size: inherit;
   transition: all 0.3s ease;
   color: #f97316;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 .signin-link:hover {
@@ -744,8 +744,6 @@
 
 
 
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 /* Enhanced Animations for ClientHome */
 @keyframes float {

@@ -311,23 +311,8 @@ const handleManualRefresh = () => {
             Satisfy your late-night cravings with our delicious comfort food
           </p>
         </div>
-      </Container>
-      {/* Add this right after the Welcome header */}
-<Container className="mt-3">
-  <Card 
-    className="shadow-sm border-0 overflow-hidden"
-    style={{
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      cursor: 'pointer'
-    }}
-    // Change this line in ClientHome.jsx
-onClick={() => window.location.href = '/client/mood-food'}  // ✅ CORRECT
-  >
-  </Card>
-</Container>
 
-      {/* Search and Filters with Clear Filters button */}
-      <Container className="mt-1">
+        {/* Search and Filters with Clear Filters button */}
         <h2 className="text-center mb-3">Search Food Items</h2>
         <Form autoComplete="off" onSubmit={handleSearch}>
           <Row className="justify-content-center g-3 align-items-center mb-3">

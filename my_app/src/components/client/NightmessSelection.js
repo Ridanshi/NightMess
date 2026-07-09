@@ -145,7 +145,7 @@ const NightmessSelection = () => {
     }
   };
 
-  const defaultNightmessImage = "/nm-project.jpg";
+  const defaultNightmessImage = "/Images/nm-project.jpg";
 
   const isCurrentMess = (nightmessId) => {
     return currentNightmessId === nightmessId;
@@ -517,6 +517,14 @@ const NightmessSelection = () => {
                           width: '100%',
                           height: '100%',
                           objectFit: 'cover'
+                        }}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.parentElement.innerHTML = `
+                            <div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 64px;">
+                              🍽️
+                            </div>
+                          `;
                         }}
                       />
                     )}
