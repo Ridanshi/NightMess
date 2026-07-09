@@ -1112,69 +1112,6 @@ app.get("/client_by_email/:email", async (req, res) => {
   }
 });
 
-// app.post("/recharge_client", async (req, res) => {
-//   if (req.session.isLoggedIn) {
-//     const em = req.session.email;
-//     try {
-//       console.log("email from session", em);
-//       console.log(req.body);
-//       const { balance, type, clientname, email_user } = req.body;
-
-//       const recharge = new MoneyData({
-//         balance: balance,
-//         clientname: clientname,
-//         type: type,
-//         email_user: email_user,
-//         email_vendor: em,
-//       });
-
-//       // Find the client by email
-//       const client = await ClientData.findOne({ client_email: email_user });
-
-//       if (!client) {
-//         return res.status(404).json({ status: "error", msg: "Client not found." });
-//       }
-
-//       let newBalance;
-
-//       if (type === "credit") {
-//         // Add balance
-//         newBalance = client.client_balance + parseFloat(balance);
-//       } else if (type === "debit") {
-//         // Check for sufficient balance before subtracting
-//         if (client.client_balance < parseFloat(balance)) {
-//           return res.status(400).json({ status: "error", msg: "Insufficient client balance." });
-//         }
-//         newBalance = client.client_balance - parseFloat(balance);
-//       } else {
-//         return res.status(400).json({ status: "error", msg: "Invalid transaction type." });
-//       }
-
-//       // Update client balance in database
-//       await ClientData.updateOne(
-//         { client_email: email_user },
-//         { $set: { client_balance: newBalance } }
-//       );
-
-//       // Save the recharge record
-//       await recharge.save();
-
-//       res.json({ status: "success", msg: "Recharge recorded successfully." });
-
-//     } catch (err) {
-//       console.error(err);
-//       res.status(500).json({ status: "error", msg: "Recharge failed." });
-//     }
-//   } else {
-//     res.json({
-//       data: 'Failed',
-//       msg: 'Login Error'
-//     });
-//   }
-// });
-
-
-
 app.get('/get_foods', async (req, res) => {
   try {
     let query = {};
@@ -2468,111 +2405,6 @@ app.get('/api/generate-recommendations', async (req, res) => {
   }
 });
 
-// 3. Get quick recommendations (for homepage)
-// app.get('/api/quick-recommendations', async (req, res) => {
-//   try {
-//     if (!req.session.isLoggedIn) {
-//       // Don't show recommendations if user not logged in
-//       return res.json([]);
-//     }
-
-//     const userEmail = req.session.email;
-
-//     // Check if user has any order history
-//     const userOrderCount = await Order.countDocuments({
-//       client_email: userEmail,
-//       status: { $in: ['Confirmed', 'Ready'] }
-//     });
-
-//     // If user has never ordered, don't show recommendations
-//     if (userOrderCount === 0) {
-//       return res.json([]);
-//     }
-
-//     // Check if recommendations file exists
-//     const recommendationFile = `recommendations_${userEmail.replace('@', '_').replace(/\./g, '_')}.json`;
-
-//     if (fs.existsSync(recommendationFile)) {
-//       // Check if file is recent (less than 1 hour old)
-//       const stats = fs.statSync(recommendationFile);
-//       const fileAge = Date.now() - stats.mtime.getTime();
-//       const oneHour = 60 * 60 * 1000;
-
-//       if (fileAge < oneHour) {
-//         // Use existing recommendations
-//         const recommendations = JSON.parse(fs.readFileSync(recommendationFile, 'utf8'));
-//         const hybridRecs = recommendations.hybrid_recommendations || [];
-
-//         const foods = await FoodData.find({
-//           foodname: { $in: hybridRecs.slice(0, 4) },
-//           status: 'available'
-//         }).limit(4);
-
-//         return res.json(foods);
-//       }
-//     }
-
-//     // Generate new recommendations in background
-//     const orders = await Order.find({
-//       status: { $in: ['Confirmed', 'Ready'] }
-//     }).select('foodname client_email quantity createdAt type');
-
-//     if (orders.length > 0) {
-//       let csvData = 'foodname,client_email,quantity,order_date,type\n';
-//       orders.forEach(order => {
-//         const date = order.createdAt.toISOString().split('T')[0];
-//         const foodname = order.foodname.replace(/"/g, '""');
-//         csvData += `"${foodname}","${order.client_email}",${order.quantity},"${date}","${order.type}"\n`;
-//       });
-//       fs.writeFileSync('orders_data.csv', csvData);
-
-//       // Run Python script in background
-//       spawn('python', ['recommendation_engine.py', userEmail], {
-//         detached: true,
-//         stdio: 'ignore'
-//       }).unref();
-//     }
-
-//     // Return popular items as fallback
-//     const popularItems = await Order.aggregate([
-//       { $match: { status: { $in: ['Confirmed', 'Ready'] } } },
-//       { $group: { _id: '$foodname', totalOrders: { $sum: '$quantity' } } },
-//       { $sort: { totalOrders: -1 } },
-//       { $limit: 4 }
-//     ]);
-
-//     const popularFoodNames = popularItems.map(item => item._id);
-//     const foods = await FoodData.find({
-//       foodname: { $in: popularFoodNames },
-//       status: 'available'
-//     }).limit(4);
-
-//     res.json(foods);
-
-//   } catch (error) {
-//     console.error('Error in quick recommendations:', error);
-
-//     // Fallback to popular items
-//     try {
-//       const popularItems = await Order.aggregate([
-//         { $match: { status: { $in: ['Confirmed', 'Ready'] } } },
-//         { $group: { _id: '$foodname', totalOrders: { $sum: '$quantity' } } },
-//         { $sort: { totalOrders: -1 } },
-//         { $limit: 4 }
-//       ]);
-
-//       const popularFoodNames = popularItems.map(item => item._id);
-//       const foods = await FoodData.find({
-//         foodname: { $in: popularFoodNames },
-//         status: 'available'
-//       }).limit(4);
-
-//       res.json(foods);
-//     } catch (fallbackError) {
-//       res.json([]);
-//     }
-//   }
-// });
 
 app.post('/api/generate-mess-recommendations', async (req, res) => {
   try {
@@ -3013,14 +2845,6 @@ app.post("/set_selected_nightmess", async (req, res) => {
     });
   }
 });
-
-
-
-// ============================================
-// UPDATED BACKEND APIs - Replace in index.js
-// ============================================
-
-
 
 // ✅ 3. /request_recharge - Client sends request to SELECTED mess
 app.post("/request_recharge", async (req, res) => {
