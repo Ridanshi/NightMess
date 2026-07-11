@@ -1480,6 +1480,9 @@ app.post("/confirm_order", async (req, resp) => {
 
       await Cart.deleteMany({ _id: { $in: cartItems.map(item => item._id) } });
 
+      // Fire-and-forget: regenerate this client's recommendations in the background
+      spawn('python', ['recommended.py', clientEmail]).on('error', () => {});
+
       return resp.json({ msg: "Order confirmed" });
     } else {
       return resp.json({ data: "Failed", msg: "Login First to Place Order" });
@@ -2266,48 +2269,6 @@ app.post("/create_order", async (req, res) => {
 
 
 
-app.get('/api/export-orders-for-recommendations', async (req, res) => {
-  try {
-    const orders = await Order.find({
-      status: { $in: ['Confirmed', 'Ready'] }
-    }).select('foodname client_email quantity createdAt type');
-
-    console.log(`📊 Exporting ${orders.length} orders for recommendations`);
-
-    if (orders.length === 0) {
-      fs.writeFileSync('orders_data.csv', 'foodname,client_email,quantity,order_date,type\n');
-      return res.json({
-        success: true,
-        message: 'No orders found, empty CSV created',
-        totalOrders: 0
-      });
-    }
-
-    // ✅ Convert to CSV format with proper type handling
-    let csvData = 'foodname,client_email,quantity,order_date,type\n';
-    orders.forEach(order => {
-      const date = order.createdAt.toISOString().split('T')[0];
-      const foodname = order.foodname.replace(/"/g, '""');
-      const type = order.type || 'veg'; // ✅ Default to 'veg' if missing
-      csvData += `"${foodname}","${order.client_email}",${order.quantity},"${date}","${type}"\n`;
-    });
-
-    fs.writeFileSync('orders_data.csv', csvData);
-
-    console.log('✅ Orders CSV created successfully');
-    console.log(`Sample data: ${csvData.split('\n').slice(0, 3).join('\n')}`);
-
-    res.json({
-      success: true,
-      message: 'Orders data exported for recommendations',
-      totalOrders: orders.length
-    });
-  } catch (error) {
-    console.error('❌ Error exporting orders:', error);
-    res.status(500).json({ success: false, message: 'Export failed', error: error.message });
-  }
-});
-
 
 // 2. Generate recommendations for current user
 app.get('/api/generate-recommendations', async (req, res) => {
@@ -2321,22 +2282,8 @@ app.get('/api/generate-recommendations', async (req, res) => {
 
     const userEmail = req.session.email;
 
-    // First, export the orders data
-    const orders = await Order.find({
-      status: { $in: ['Confirmed', 'Ready'] }
-    }).select('foodname client_email quantity createdAt type');
-
-    // Generate CSV
-    let csvData = 'foodname,client_email,quantity,order_date,type\n';
-    orders.forEach(order => {
-      const date = order.createdAt.toISOString().split('T')[0];
-      const foodname = order.foodname.replace(/"/g, '""');
-      csvData += `"${foodname}","${order.client_email}",${order.quantity},"${date}","${order.type}"\n`;
-    });
-    fs.writeFileSync('orders_data.csv', csvData);
-
-    // Run Python recommendation script
-    const pythonProcess = spawn('python', ['recommendation_engine.py', userEmail]);
+    // Run Python recommendation script (reads orders directly from MongoDB)
+    const pythonProcess = spawn('python', ['recommended.py', userEmail]);
 
     let output = '';
     let error = '';
@@ -2569,18 +2516,9 @@ app.get('/api/quick-recommendations', async (req, res) => {
     }).select('foodname client_email quantity createdAt type');
 
     if (orders.length > 0) {
-      let csvData = 'foodname,client_email,quantity,order_date,type\n';
-      orders.forEach(order => {
-        const date = order.createdAt.toISOString().split('T')[0];
-        const foodname = order.foodname.replace(/"/g, '""');
-        const type = order.type || 'veg';
-        csvData += `"${foodname}","${order.client_email}",${order.quantity},"${date}","${type}"\n`;
-      });
-      fs.writeFileSync('orders_data.csv', csvData);
+      console.log('🐍 Running Python recommendation script...');
 
-      console.log('✅ CSV created, running Python script...');
-
-      const pythonProcess = spawn('python', ['recommendation_engine.py', userEmail]);
+      const pythonProcess = spawn('python', ['recommended.py', userEmail]);
 
       let output = '';
       let error = '';
@@ -2679,16 +2617,8 @@ app.post('/api/refresh-recommendations', async (req, res) => {
       });
     }
 
-    let csvData = 'foodname,client_email,quantity,order_date,type\n';
-    orders.forEach(order => {
-      const date = order.createdAt.toISOString().split('T')[0];
-      const foodname = order.foodname.replace(/"/g, '""');
-      csvData += `"${foodname}","${order.client_email}",${order.quantity},"${date}","${order.type}"\n`;
-    });
-    fs.writeFileSync('orders_data.csv', csvData);
-
-    // Run Python script
-    const pythonProcess = spawn('python', ['recommendation_engine.py', userEmail]);
+    // Run Python script (reads orders directly from MongoDB)
+    const pythonProcess = spawn('python', ['recommended.py', userEmail]);
 
     let output = '';
     let error = '';

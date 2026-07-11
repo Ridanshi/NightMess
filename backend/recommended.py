@@ -4,22 +4,36 @@ from datetime import datetime, timedelta
 import json
 import os
 from collections import defaultdict
+from pymongo import MongoClient
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class FoodRecommendationEngine:
-    def __init__(self, orders_file='orders_data.csv'):
-        self.orders_file = orders_file
+    def __init__(self):
         self.user_item_matrix = None
         self.item_popularity = None
-        
+
     def load_data(self):
-        """Load order data from CSV"""
+        """Load confirmed/ready orders directly from MongoDB"""
         try:
-            if not os.path.exists(self.orders_file):
-                print("No orders data file found")
+            mongo_uri = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/nightMess')
+            client = MongoClient(mongo_uri)
+            db = client.get_default_database()
+
+            orders = list(db.orders.find(
+                {'status': {'$in': ['Confirmed', 'Ready']}},
+                {'foodname': 1, 'client_email': 1, 'quantity': 1, 'createdAt': 1, 'type': 1}
+            ))
+            client.close()
+
+            if not orders:
                 return pd.DataFrame()
-            
-            df = pd.read_csv(self.orders_file)
-            return df
+
+            df = pd.DataFrame(orders)
+            df['order_date'] = pd.to_datetime(df['createdAt']).dt.strftime('%Y-%m-%d')
+            df['type'] = df['type'].fillna('veg')
+            return df[['foodname', 'client_email', 'quantity', 'order_date', 'type']]
         except Exception as e:
             print(f"Error loading data: {e}")
             return pd.DataFrame()
@@ -294,11 +308,22 @@ class FoodRecommendationEngine:
         return recommendations
 
 
+def _json_safe(obj):
+    """Convert numpy/pandas types to native Python for json.dump"""
+    if isinstance(obj, np.integer):
+        return int(obj)
+    if isinstance(obj, np.floating):
+        return float(obj)
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+
+
 def main():
     """Main function to generate recommendations"""
     try:
         # Initialize recommendation engine
-        engine = FoodRecommendationEngine('orders_data.csv')
+        engine = FoodRecommendationEngine()
         
         # Read user email from command line or config
         import sys
@@ -314,7 +339,7 @@ def main():
         # Save to JSON file
         output_file = f'recommendations_{user_email.replace("@", "_").replace(".", "_")}.json'
         with open(output_file, 'w') as f:
-            json.dump(recommendations, f, indent=2)
+            json.dump(recommendations, f, indent=2, default=_json_safe)
         
         print(f"Recommendations generated successfully and saved to {output_file}")
         
