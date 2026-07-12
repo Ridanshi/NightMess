@@ -8,7 +8,6 @@ import Loader from './Loader';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const [allOrders, setAllOrders] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [loading, setLoading] = useState(true);
   const pollingRef = useRef(null);
@@ -27,14 +26,9 @@ const Orders = () => {
         withCredentials: true
       });
 
-      const allOrdersRes = await API.get("/show_all_orders_for_numbering", {
-        withCredentials: true
-      });
-
       if (userOrdersRes.data.data === "Failed") {
         setIsLoggedIn(false);
         setOrders([]);
-        setAllOrders([]);
       } else {
         const sortedUserOrders = userOrdersRes.data.sort((a, b) => {
           const timeA = new Date(a.createdAt || a._id);
@@ -42,16 +36,7 @@ const Orders = () => {
           return timeB - timeA;
         });
 
-        const filteredAllOrders = allOrdersRes.data.filter(
-          (o) =>
-            o.status === "Confirmed" ||
-            o.status === "Ready" ||
-            o.status === "Pending" ||
-            o.status === "Rejected"
-        );
-
         setOrders(sortedUserOrders);
-        setAllOrders(filteredAllOrders);
       }
     } catch (error) {
       if (error.response?.status === 401) {
@@ -83,33 +68,6 @@ const Orders = () => {
       groups[dateStr].push(order);
     });
     return groups;
-  };
-
-  // ✅ FIXED: Calculate order numbers PER MESS
-  const calculateGlobalOrderNumbers = (date, vendorEmail) => {
-    const ordersForDate = allOrders.filter((o) => {
-      const oDateStr = o.createdAt
-        ? formatLocalDate(o.createdAt)
-        : formatLocalDate(new Date(parseInt(o._id.substring(0, 8), 16) * 1000));
-      // ✅ Filter by BOTH date AND vendor email
-      return oDateStr === date && o.vendor_email === vendorEmail;
-    });
-
-    const confirmedOrReady = ordersForDate.filter(
-      (o) => o.status === "Confirmed" || o.status === "Ready"
-    );
-
-    const sortedOrders = confirmedOrReady.sort((a, b) => {
-      const timeA = new Date(a.createdAt);  // ✅ ONLY createdAt
-      const timeB = new Date(b.createdAt);  // ✅ ONLY createdAt
-      return timeA - timeB;
-    });
-
-    const numberMap = {};
-    sortedOrders.forEach((order, index) => {
-      numberMap[order._id] = index + 1;
-    });
-    return numberMap;
   };
 
   const groupedOrders = groupOrdersByDate(orders);
@@ -159,12 +117,9 @@ const Orders = () => {
                   <h5>Orders for {date}</h5>
                   <Row xs={1} md={2} lg={3} className="g-4">
                     {ordersForDate.map((order) => {
-                      // ✅ FIXED: Pass vendor_email to get correct order number per mess
-                      const globalOrderNumberMap = calculateGlobalOrderNumbers(date, order.vendor_email);
-
                       const displayOrderNumber =
                         order.status === "Confirmed" || order.status === "Ready"
-                          ? globalOrderNumberMap[order._id]
+                          ? order.orderNumber
                           : null;
 
                       return (

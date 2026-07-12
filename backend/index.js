@@ -2709,28 +2709,6 @@ app.get("/get_selected_nightmess", async (req, res) => {
 });
 
 // Add this NEW endpoint - accessible by all logged-in users
-app.get("/show_all_orders_for_numbering", async (req, resp) => {
-  try {
-    if (req.session.isLoggedIn) {
-      // Return all orders for numbering purposes (any authenticated user can access)
-      const orders = await Order.find({
-        status: { $in: ["Confirmed", "Ready", "Pending", "Rejected"] }
-      }).sort({ createdAt: -1 });
-
-      console.log(`Found ${orders.length} orders for numbering`);
-      resp.json(orders);
-    } else {
-      resp.status(401).json({
-        data: "Failed",
-        msg: "Login First to View Orders",
-      });
-    }
-  } catch (err) {
-    console.error("Error in show_all_orders_for_numbering:", err);
-    resp.status(500).json({ error: "server error" });
-  }
-});
-
 // ✅ UPDATED: Set selected nightmess in session (CLIENTS ONLY)
 app.post("/set_selected_nightmess", async (req, res) => {
   try {

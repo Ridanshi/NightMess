@@ -211,7 +211,7 @@ const Cart = () => {
               <h4>Please select a nightmess to view your cart</h4>
               <p>You need to select a nightmess before you can access your cart.</p>
             </Alert>
-            <Link to="/nightmess-selection" className="btn btn-primary mt-3">
+            <Link to="/select-nightmess" className="btn btn-primary mt-3">
               Select Nightmess
             </Link>
           </div>

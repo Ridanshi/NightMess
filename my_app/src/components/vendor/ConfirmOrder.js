@@ -12,7 +12,6 @@ import {
   Modal,
 } from "react-bootstrap";
 import VendorMenu from "./VendorMenu";
-import { calculateGlobalOrderNumbersForDate } from "./OrderUtils";
 
 const styles = `
 .equal-height-card {
@@ -239,17 +238,14 @@ const confirmRemoveOrder = async () => {
     return groups;
   };
 
-  // Sort orders by their global order numbers for display
-  const sortOrdersForDisplay = (ordersForDate, orderNumberMap) => {
+  // Sort orders by their stored order number (assigned server-side on confirm)
+  const sortOrdersForDisplay = (ordersForDate) => {
     return ordersForDate.sort((a, b) => {
-      const orderNumA = orderNumberMap[a._id];
-      const orderNumB = orderNumberMap[b._id];
-
-      if (orderNumA && orderNumB) {
-        return orderNumA - orderNumB; // ascending
+      if (a.orderNumber && b.orderNumber) {
+        return a.orderNumber - b.orderNumber; // ascending
       }
-      if (orderNumA && !orderNumB) return -1;
-      if (!orderNumA && orderNumB) return 1;
+      if (a.orderNumber && !b.orderNumber) return -1;
+      if (!a.orderNumber && b.orderNumber) return 1;
       return 0;
     });
   };
@@ -269,8 +265,7 @@ const confirmRemoveOrder = async () => {
           <>
             {sortedGroupKeys.map((date) => {
               const ordersForDate = groupedOrders[date];
-              const orderNumberMap = calculateGlobalOrderNumbersForDate(orders, date, formatLocalDate);
-              const sortedOrdersForDate = sortOrdersForDisplay(ordersForDate, orderNumberMap);
+              const sortedOrdersForDate = sortOrdersForDisplay(ordersForDate);
 
               return (
                 <div key={date}>
@@ -279,7 +274,7 @@ const confirmRemoveOrder = async () => {
                     {sortedOrdersForDate.map((order) => {
                       const displayOrderNumber =
                         order.status === "Confirmed" || order.status === "Ready"
-                          ? orderNumberMap[order._id]
+                          ? order.orderNumber
                           : null;
 
                       return (
