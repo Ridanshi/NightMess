@@ -31,6 +31,7 @@ import ConfirmOrder from './components/vendor/ConfirmOrder';
 import Footer from './components/Footer';
 
 import NightmessSelection from './components/client/NightmessSelection';
+import Wrong_login from './components/Wrong_login';
 import './App.css';
 
 // Layout component for client routes including Footer and Outlet for nested routes
@@ -55,6 +56,7 @@ function App() {
             <Route path="/change_pass" element={<ChangePass />} />
             <Route path="/get_admin" element={<Editprof />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/wrong_login" element={<Wrong_login />} />
 
             {/* Admin Routes */}
             <Route path="/admin/adminhome" element={<AdminHome />} />

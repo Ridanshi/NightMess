@@ -50,7 +50,7 @@ function VendorHome() {
         setUsertype(res.data.usertype);
         setResult("");
       } else {
-        alert("Invalid credentials");
+        navigate("/wrong_login");
       }
     } catch (err) {
       console.log(err);

@@ -1,4 +1,6 @@
 ﻿import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import API from 'axiosConfig';
 import ClientMenu from "./ClientMenu";
 import {
   Container,
@@ -22,6 +24,7 @@ import '../css/ClientHome.css';
 import Loader from './Loader';
 
 function ClientHome() {
+  const navigate = useNavigate();
   const [result, setResult] = useState("");
   const [foodname, setFoodname] = useState("");
   const [selectedType, setSelectedType] = useState("");
@@ -42,8 +45,20 @@ function ClientHome() {
   const [orderHistoryCount, setOrderHistoryCount] = useState(0);
 
   useEffect(() => {
+    checkUser();
     refreshFoodItems();
   }, []);
+
+  const checkUser = async () => {
+    try {
+      const res = await API.get("/isUser", { withCredentials: true });
+      if (res.data.usertype !== "client") {
+        navigate("/wrong_login");
+      }
+    } catch (err) {
+      navigate("/wrong_login");
+    }
+  };
 
   const handleSearch = async (e) => {
     e.preventDefault();
