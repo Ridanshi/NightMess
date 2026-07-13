@@ -1147,33 +1147,6 @@ app.post("/get_foodname", async (req, res) => {
 });
 
 
-// Book Order Route
-app.post('/api/book', async (req, res) => {
-  const { email, cartItems, total } = req.body;
-
-  const client = await Client.findOne({ client_email: email });
-  if (!client) return res.status(404).send('User not found');
-
-  if (client.client_balance < total) {
-    return res.status(400).send('Insufficient balance');
-  }
-
-  // Update client balance
-  client.client_balance -= total;
-  await client.save();
-
-  // Log money transaction
-  await Money.create({
-    balance: total,
-    clientname: client.clientname,
-    type: 'debit',
-    email_user: email,
-    email_vendor: email
-  });
-
-  res.send({ success: true });
-});
-
 
 app.post("/addtocart", async (req, res) => {
   if (req.session.isLoggedIn) {
