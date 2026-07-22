@@ -818,7 +818,19 @@ app.post("/delete_vendors", async (req, resp) => {
       
       // Also delete from LoginData
       await LoginData.findOneAndDelete({ email: vendorEmail });
-      
+
+      // Clear any client's stale selection pointing at this now-deleted vendor
+      // (wallet balances are left untouched - those are real money, not a
+      // selection pointer, and need an explicit refund decision, not a silent delete)
+      await ClientData.updateMany(
+        { last_selected_vendor: vendorEmail },
+        { $set: { last_selected_vendor: null, last_selected_nightmess_id: null } }
+      );
+
+      // Remove this vendor's menu items - nothing else can reference them
+      // once the mess itself no longer exists
+      await FoodData.deleteMany({ vendor_email: vendorEmail });
+
       console.log(`Deleted vendor: ${vendorEmail}`);
       
       resp.json({
