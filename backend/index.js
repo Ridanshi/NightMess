@@ -1498,13 +1498,22 @@ app.get("/client_balance", async (req, resp) => {
         const vendor = await VendorData.findOne({ vendor_email: req.session.selectedVendorEmail });
         if (vendor) {
           messname = vendor.messname;
-          
+
           // ✅ Find wallet for THIS mess
           const messWallet = client.mess_wallets?.find(
             w => w.vendor_email === req.session.selectedVendorEmail
           );
-          
+
           balance = messWallet ? messWallet.balance : 0;
+        } else {
+          // Selected mess no longer exists (vendor deleted) - clear the stale
+          // reference instead of silently showing blank name/balance forever
+          req.session.selectedVendorEmail = null;
+          req.session.selectedNightmessId = null;
+          await ClientData.updateOne(
+            { client_email: req.session.email },
+            { $set: { last_selected_vendor: null, last_selected_nightmess_id: null } }
+          );
         }
       }
       
