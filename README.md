@@ -105,6 +105,24 @@ Per-mess daily order numbers (1, 2, 3... restarting each day) are assigned at co
 
 ---
 
+## Patent
+
+This project's core system — the wallet-based multi-entity food ordering and management model for campus environments — has been filed for patent protection in India.
+
+| Field | Detail |
+|---|---|
+| Application Number | 202641027762 |
+| Application Type | Ordinary Application |
+| Date of Filing | 09/03/2026 |
+| Applicant | Vellore Institute of Technology |
+| Title of Invention | Wallet-Based Multi-Entity Food Ordering and Management System for Campus Environments |
+| Field of Invention | Computer Science |
+| Publication Date (U/S 11A) | 20/03/2026 |
+
+Filed with the Office of the Controller General of Patents, Designs & Trade Marks, Government of India.
+
+---
+
 ## Deployment
 
 | Component | Platform |
